@@ -1,10 +1,23 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adriel Kourlate</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- ES Modules Import Map pour Three.js & Postprocessing -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://esm.sh/three@0.160.0",
+          "postprocessing": "https://esm.sh/postprocessing@6.34.3"
+        }
+      }
+    </script>
+    <script type="module" src="background.js"></script>
+
     <style>
         .lang-btn {
             background: none;
@@ -17,13 +30,16 @@
             font-weight: 500;
             transition: all 0.2s ease;
         }
+
         .lang-btn:hover {
             border-color: var(--accent);
             color: var(--accent);
         }
     </style>
 </head>
+
 <body>
+    <canvas id="bg-canvas"></canvas>
 
     <header>
         <div class="container">
@@ -42,20 +58,32 @@
     </header>
 
     <main class="container">
-        
+
         <!-- HERO -->
         <section class="hero">
             <div class="hero-content">
                 <h1 class="i18n" data-fr="Adriel Kourlate" data-en="Adriel Kourlate">Adriel Kourlate</h1>
-                <h2 class="subtitle i18n" data-fr="Étudiant en Big Data & Management" data-en="Student in Big Data & Management">Étudiant en Big Data & Management</h2>
-                
-                <p class="i18n" data-fr="Je suis passionné par l'analyse de données et le développement logique. Je conçois des outils analytiques et explore les applications concrètes de l'intelligence artificielle pour résoudre des problématiques business complexes." data-en="I am passionate about data analysis and software development. I design analytical tools and explore concrete applications of artificial intelligence to solve complex business problems.">
-                    Je suis passionné par l'analyse de données et le développement logique. Je conçois des outils analytiques et explore les applications concrètes de l'intelligence artificielle pour résoudre des problématiques business complexes.
+                <h2 class="subtitle i18n" data-fr="Étudiant en Big Data & Management"
+                    data-en="Student in Big Data & Management">Étudiant en Big Data & Management</h2>
+
+                <p class="i18n"
+                    data-fr="Je suis passionné par l'analyse de données et le développement logique. Je conçois des outils analytiques et explore les applications concrètes de l'intelligence artificielle pour résoudre des problématiques business complexes."
+                    data-en="I am passionate about data analysis and software development. I design analytical tools and explore concrete applications of artificial intelligence to solve complex business problems.">
+                    Je suis passionné par l'analyse de données et le développement logique. Je conçois des outils
+                    analytiques et explore les applications concrètes de l'intelligence artificielle pour résoudre des
+                    problématiques business complexes.
                 </p>
-                
-                <a href="mailto:adriel.kourlate5@audencia.com" class="cta i18n" data-fr="Me contacter pour un stage" data-en="Contact me for an internship">
-                    Me contacter pour un stage
-                </a>
+
+                <div class="hero-buttons">
+                    <a href="mailto:adriel.kourlate5@audencia.com" class="cta i18n" data-fr="Me contacter pour un stage"
+                        data-en="Contact me for an internship">
+                        Me contacter pour un stage
+                    </a>
+                    <a href="CV_Adriel.pdf" download class="cta cta-outline i18n" data-fr="Télécharger mon CV"
+                        data-en="Download my CV">
+                        Télécharger mon CV
+                    </a>
+                </div>
             </div>
             <!-- Photo de Profil (Enregistre ton image sous le nom 'photo.jpg' ou 'photo.png' dans le dossier Portfolio) -->
             <div class="hero-photo">
@@ -66,14 +94,19 @@
         <!-- EDUCATION -->
         <section id="education">
             <h2 class="section-label i18n" data-fr="Formation Académique" data-en="Education">Formation Académique</h2>
-            
+
             <div class="entry">
                 <div class="entry-date i18n" data-fr="2024 — Présent" data-en="2024 — Present">2024 — Présent</div>
                 <div class="entry-details">
-                    <h3 class="i18n" data-fr="Centrale Nantes × Audencia" data-en="Centrale Nantes × Audencia">Centrale Nantes × Audencia</h3>
-                    <h4 class="i18n" data-fr="Bachelor Big Data and Management" data-en="Bachelor in Big Data and Management">Bachelor Big Data and Management</h4>
-                    <p class="i18n" data-fr="Double cursus ingénierie et business. Axé sur la gestion des données, l'analyse stratégique et les mathématiques appliquées." data-en="Dual degree in engineering and business. Focused on data management, strategic analysis, and applied mathematics.">
-                        Double cursus ingénierie et business. Axé sur la gestion des données, l'analyse stratégique et les mathématiques appliquées.
+                    <h3 class="i18n" data-fr="Centrale Nantes × Audencia" data-en="Centrale Nantes × Audencia">Centrale
+                        Nantes × Audencia</h3>
+                    <h4 class="i18n" data-fr="Bachelor Big Data and Management"
+                        data-en="Bachelor in Big Data and Management">Bachelor Big Data and Management</h4>
+                    <p class="i18n"
+                        data-fr="Double cursus ingénierie et business. Axé sur la gestion des données, l'analyse stratégique et les mathématiques appliquées."
+                        data-en="Dual degree in engineering and business. Focused on data management, strategic analysis, and applied mathematics.">
+                        Double cursus ingénierie et business. Axé sur la gestion des données, l'analyse stratégique et
+                        les mathématiques appliquées.
                     </p>
                 </div>
             </div>
@@ -81,9 +114,11 @@
             <div class="entry">
                 <div class="entry-date i18n" data-fr="Mars — Mai 2025" data-en="March — May 2025">Mars — Mai 2025</div>
                 <div class="entry-details">
-                    <h3 class="i18n" data-fr="Centrale Casablanca" data-en="Centrale Casablanca">Centrale Casablanca</h3>
+                    <h3 class="i18n" data-fr="Centrale Casablanca" data-en="Centrale Casablanca">Centrale Casablanca
+                    </h3>
                     <h4 class="i18n" data-fr="Semestre d'échange" data-en="Exchange Semester">Semestre d'échange</h4>
-                    <p class="i18n" data-fr="Immersion académique et culturelle au Maroc." data-en="Academic and cultural immersion in Morocco.">
+                    <p class="i18n" data-fr="Immersion académique et culturelle au Maroc."
+                        data-en="Academic and cultural immersion in Morocco.">
                         Immersion académique et culturelle au Maroc.
                     </p>
                 </div>
@@ -92,8 +127,10 @@
             <div class="entry">
                 <div class="entry-date">2024</div>
                 <div class="entry-details">
-                    <h3 class="i18n" data-fr="Lycée Livet (Nantes)" data-en="Lycée Livet (Nantes)">Lycée Livet (Nantes)</h3>
-                    <h4 class="i18n" data-fr="Baccalauréat Général" data-en="High School Diploma">Baccalauréat Général</h4>
+                    <h3 class="i18n" data-fr="Lycée Livet (Nantes)" data-en="Lycée Livet (Nantes)">Lycée Livet (Nantes)
+                    </h3>
+                    <h4 class="i18n" data-fr="Baccalauréat Général" data-en="High School Diploma">Baccalauréat Général
+                    </h4>
                     <p class="i18n" data-fr="Mention Assez Bien." data-en="Graduated with honors.">
                         Mention Assez Bien.
                     </p>
@@ -104,10 +141,11 @@
         <!-- SKILLS -->
         <section id="skills">
             <h2 class="section-label i18n" data-fr="Boîte à outils" data-en="Toolbox">Boîte à outils</h2>
-            
+
             <div class="skills-grid">
                 <div>
-                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem;" class="i18n" data-fr="Compétences Techniques" data-en="Technical Skills">Compétences Techniques</h3>
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem;" class="i18n" data-fr="Compétences Techniques"
+                        data-en="Technical Skills">Compétences Techniques</h3>
                     <ul class="skills-list">
                         <li>Python</li>
                         <li>SQL</li>
@@ -117,12 +155,16 @@
                     </ul>
                 </div>
                 <div>
-                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem;" class="i18n" data-fr="Savoir-être" data-en="Soft Skills">Savoir-être</h3>
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem;" class="i18n" data-fr="Savoir-être"
+                        data-en="Soft Skills">Savoir-être</h3>
                     <ul class="skills-list">
                         <li class="i18n" data-fr="Travail d'équipe" data-en="Teamwork">Travail d'équipe</li>
-                        <li class="i18n" data-fr="Autonomie & Rigueur" data-en="Autonomy & Rigor">Autonomie & Rigueur</li>
-                        <li class="i18n" data-fr="Curiosité d'apprentissage" data-en="Curiosity & Learning">Curiosité d'apprentissage</li>
-                        <li class="i18n" data-fr="Orientation résultat" data-en="Result-oriented">Orientation résultat</li>
+                        <li class="i18n" data-fr="Autonomie & Rigueur" data-en="Autonomy & Rigor">Autonomie & Rigueur
+                        </li>
+                        <li class="i18n" data-fr="Curiosité d'apprentissage" data-en="Curiosity & Learning">Curiosité
+                            d'apprentissage</li>
+                        <li class="i18n" data-fr="Orientation résultat" data-en="Result-oriented">Orientation résultat
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -130,15 +172,19 @@
 
         <!-- EXPERIENCE -->
         <section id="experience">
-            <h2 class="section-label i18n" data-fr="Engagement & Expérience" data-en="Engagement & Experience">Engagement & Expérience</h2>
-            
+            <h2 class="section-label i18n" data-fr="Engagement & Expérience" data-en="Engagement & Experience">
+                Engagement & Expérience</h2>
+
             <div class="entry">
                 <div class="entry-date">09/2023 — 07/2024</div>
                 <div class="entry-details">
                     <h3 class="i18n" data-fr="Cadet de la Défense" data-en="Defense Cadet">Cadet de la Défense</h3>
                     <h4 class="i18n" data-fr="A.S.O.R Nantes 44" data-en="A.S.O.R Nantes 44">A.S.O.R Nantes 44</h4>
-                    <p class="i18n" data-fr="Formation citoyenne et militaire. Mots-clés : Discipline, citoyenneté, cohésion et travail d'équipe." data-en="Military and civic training. Key skills: Discipline, citizenship, cohesion, and teamwork.">
-                        Formation citoyenne et militaire. Mots-clés : Discipline, citoyenneté, cohésion et travail d'équipe.
+                    <p class="i18n"
+                        data-fr="Formation citoyenne et militaire. Mots-clés : Discipline, citoyenneté, cohésion et travail d'équipe."
+                        data-en="Military and civic training. Key skills: Discipline, citizenship, cohesion, and teamwork.">
+                        Formation citoyenne et militaire. Mots-clés : Discipline, citoyenneté, cohésion et travail
+                        d'équipe.
                     </p>
                 </div>
             </div>
@@ -146,9 +192,11 @@
             <div class="entry">
                 <div class="entry-date">07/2023</div>
                 <div class="entry-details">
-                    <h3 class="i18n" data-fr="SNU (Service National Universel)" data-en="Universal National Service (SNU)">SNU (Service National Universel)</h3>
+                    <h3 class="i18n" data-fr="SNU (Service National Universel)"
+                        data-en="Universal National Service (SNU)">SNU (Service National Universel)</h3>
                     <h4 class="i18n" data-fr="Séjour de cohésion" data-en="Cohesion Stay">Séjour de cohésion</h4>
-                    <p class="i18n" data-fr="Développement du leadership, de la solidarité et de l'engagement civique." data-en="Development of leadership, solidarity, and civic engagement.">
+                    <p class="i18n" data-fr="Développement du leadership, de la solidarité et de l'engagement civique."
+                        data-en="Development of leadership, solidarity, and civic engagement.">
                         Développement du leadership, de la solidarité et de l'engagement civique.
                     </p>
                 </div>
@@ -157,38 +205,50 @@
 
         <!-- PROJECTS OPEN SOURCE -->
         <section id="projects">
-            <h2 class="section-label i18n" data-fr="Projets Techniques" data-en="Technical Projects">Projets Techniques</h2>
-            
+            <h2 class="section-label i18n" data-fr="Projets Techniques" data-en="Technical Projects">Projets Techniques
+            </h2>
+
             <div class="projects-grid">
-                
-                <a href="https://github.com/adrielakak/project-election" target="_blank" class="project-card">
-                    <h3>project-election</h3>
-                    <div class="subtitle">Jupyter Notebook</div>
-                    <p class="i18n" data-fr="Analyse de données statistiques et exploration autour des élections." data-en="Statistical data analysis and exploration of election data.">
-                        Analyse de données statistiques et exploration autour des élections.
+
+                <a href="https://ateliers-theatre-nantes.onrender.com/" target="_blank" class="project-card"
+                    style="border-color: rgba(37, 99, 235, 0.4); box-shadow: 0 4px 20px rgba(37, 99, 235, 0.1);">
+                    <h3>Ateliers Théâtre Nantes</h3>
+                    <div class="subtitle i18n" data-fr="Site Client (Projet Freelance)"
+                        data-en="Client Website (Freelance Project)">Site Client (Projet Freelance)</div>
+                    <p class="i18n"
+                        data-fr="Conception et développement d'une plateforme web pour la vente de cours de théâtre et de doublage. Parcours client fluide et design attrayant."
+                        data-en="Design and development of a web platform to sell theater and dubbing courses. Seamless customer journey and attractive design.">
+                        Conception et développement d'une plateforme web pour la vente de cours de théâtre et de
+                        doublage. Parcours client fluide et design attrayant.
                     </p>
                 </a>
 
-                <a href="https://github.com/adrielakak/Algobot" target="_blank" class="project-card">
-                    <h3>Algobot</h3>
-                    <div class="subtitle">Python</div>
-                    <p class="i18n" data-fr="Scripts et configurations de bot. Automatisation et stratégies d'algorithmes." data-en="Bot scripts and configurations. Automation and algorithmic strategies.">
-                        Scripts et configurations de bot. Automatisation et stratégies d'algorithmes.
+                <a href="https://github.com/adrielakak/project-election" target="_blank" class="project-card">
+                    <h3>project-election</h3>
+                    <div class="subtitle">Jupyter Notebook</div>
+                    <p class="i18n" data-fr="Analyse de données statistiques et exploration autour des élections."
+                        data-en="Statistical data analysis and exploration of election data.">
+                        Analyse de données statistiques et exploration autour des élections.
                     </p>
                 </a>
 
                 <a href="https://github.com/adrielakak/Projet-Dame-" target="_blank" class="project-card">
                     <h3>Projet-Dame-</h3>
                     <div class="subtitle">Python</div>
-                    <p class="i18n" data-fr="Implémentation d'un jeu de dames avec logique de grille mathématique et règles complexes." data-en="Implementation of a checkers game with mathematical grid logic and complex rules.">
+                    <p class="i18n"
+                        data-fr="Implémentation d'un jeu de dames avec logique de grille mathématique et règles complexes."
+                        data-en="Implementation of a checkers game with mathematical grid logic and complex rules.">
                         Implémentation d'un jeu de dames avec logique de grille mathématique et règles complexes.
                     </p>
                 </a>
 
                 <div class="project-card" style="border-style: dashed;">
                     <h3 class="i18n" data-fr="Centres d'intérêt" data-en="Interests">Centres d'intérêt</h3>
-                    <div class="subtitle" style="color: var(--text-secondary);" class="i18n" data-fr="Perso" data-en="Personal">Perso</div>
-                    <p class="i18n" data-fr="Je suis passionné par les <strong>Voyages</strong>, la <strong>Cinématographie</strong> et le <strong>Sport</strong>." data-en="I am passionate about <strong>Travel</strong>, <strong>Cinematography</strong>, and <strong>Sports</strong>.">
+                    <div class="subtitle" style="color: var(--text-secondary);" class="i18n" data-fr="Perso"
+                        data-en="Personal">Perso</div>
+                    <p class="i18n"
+                        data-fr="Je suis passionné par les <strong>Voyages</strong>, la <strong>Cinématographie</strong> et le <strong>Sport</strong>."
+                        data-en="I am passionate about <strong>Travel</strong>, <strong>Cinematography</strong>, and <strong>Sports</strong>.">
                         Je suis passionné par les Voyages, la Cinématographie et le Sport.
                     </p>
                 </div>
@@ -201,27 +261,41 @@
             <h2 class="section-label i18n" data-fr="Contact" data-en="Contact">Contact</h2>
             <div class="contact-wrap">
                 <a href="mailto:adriel.kourlate5@audencia.com" class="contact-link">
-                    <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
+                    </svg>
                     adriel.kourlate5@audencia.com
                 </a>
-                
+
                 <a href="tel:+33671265817" class="contact-link">
-                    <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
                     +33 6 71 26 58 17
                 </a>
 
                 <a href="https://www.linkedin.com/in/adriel-kourlate-28033032b/" target="_blank" class="contact-link">
-                    <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                        <rect width="4" height="12" x="2" y="9" />
+                        <circle cx="4" cy="4" r="2" />
+                    </svg>
                     LinkedIn
                 </a>
 
                 <a href="https://github.com/adrielakak" target="_blank" class="contact-link">
-                    <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                    </svg>
                     GitHub
                 </a>
             </div>
-            
-            <p class="footer-copy i18n" data-fr="© 2025 Adriel Kourlate. Tous droits réservés." data-en="© 2025 Adriel Kourlate. All rights reserved.">
+
+            <p class="footer-copy i18n" data-fr="© 2025 Adriel Kourlate. Tous droits réservés."
+                data-en="© 2025 Adriel Kourlate. All rights reserved.">
                 © 2025 Adriel Kourlate. Tous droits réservés.
             </p>
         </footer>
@@ -232,26 +306,27 @@
         // Language Toggle Logic
         const toggleBtn = document.getElementById('lang-toggle');
         const i18nElements = document.querySelectorAll('.i18n');
-        
+
         let currentLang = 'fr'; // 'fr' or 'en'
 
         toggleBtn.addEventListener('click', () => {
             currentLang = currentLang === 'fr' ? 'en' : 'fr';
-            
+
             // Update button text to show the OTHER language (what you can switch to)
             toggleBtn.textContent = currentLang === 'fr' ? 'EN' : 'FR';
-            
+
             // Swap text content based on data attributes
             i18nElements.forEach(el => {
                 if (el.getAttribute(`data-${currentLang}`)) {
                     el.innerHTML = el.getAttribute(`data-${currentLang}`);
                 }
             });
-            
+
             // Update document language for accessibility
             document.documentElement.lang = currentLang;
         });
     </script>
 
 </body>
+
 </html>
