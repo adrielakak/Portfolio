@@ -236,3 +236,78 @@ document.addEventListener("DOMContentLoaded", () => {
         }, { passive: true });
     }
 });
+
+// 4. Minecraft Easter Egg (Mining CV)
+document.addEventListener("DOMContentLoaded", () => {
+    const mcBlock = document.getElementById("mc-block");
+    const cvBtn = document.getElementById("mc-cv-btn");
+    let clicks = 0;
+    
+    if (mcBlock && cvBtn) {
+        mcBlock.addEventListener("click", () => {
+            clicks++;
+            
+            // Add shake class
+            mcBlock.classList.remove("mining");
+            void mcBlock.offsetWidth; // trigger reflow
+            mcBlock.classList.add("mining");
+
+            // Cracks
+            if (clicks === 1) mcBlock.classList.add("cracked-1");
+            if (clicks === 2) {
+                mcBlock.classList.remove("cracked-1");
+                mcBlock.classList.add("cracked-2");
+            }
+            if (clicks === 3) {
+                mcBlock.classList.remove("cracked-2");
+                mcBlock.classList.add("cracked-3");
+            }
+            
+            if (clicks >= 4) {
+                // Break block!
+                mcBlock.style.opacity = 0;
+                setTimeout(() => {
+                    mcBlock.classList.add("broken");
+                    cvBtn.classList.remove("hidden-cv");
+                    cvBtn.classList.add("revealed-cv");
+                }, 50);
+                
+                // Add particle effects
+                createParticles(mcBlock);
+            }
+        });
+    }
+
+    function createParticles(block) {
+        const rect = block.getBoundingClientRect();
+        const container = document.body;
+        for (let i = 0; i < 12; i++) {
+            const particle = document.createElement('div');
+            particle.style.position = 'absolute';
+            particle.style.width = (4 + Math.random() * 6) + 'px';
+            particle.style.height = particle.style.width;
+            // Mixed colors: stone and accent
+            particle.style.backgroundColor = Math.random() > 0.6 ? 'var(--accent)' : '#555'; 
+            particle.style.left = (rect.left + rect.width / 2) + window.scrollX + 'px';
+            particle.style.top = (rect.top + rect.height / 2) + window.scrollY + 'px';
+            particle.style.zIndex = 1000;
+            particle.style.borderRadius = '2px';
+            container.appendChild(particle);
+
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 30 + Math.random() * 50;
+            const tx = Math.cos(angle) * velocity;
+            const ty = Math.sin(angle) * velocity - 40; // upward bias
+
+            gsap.to(particle, {
+                x: tx,
+                y: ty,
+                rotation: Math.random() * 360,
+                opacity: 0,
+                duration: 0.6 + Math.random() * 0.4,
+                ease: "power2.out",
+                onComplete: () => particle.remove()
+            });
+        }
+    }
+});

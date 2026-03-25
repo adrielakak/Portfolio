@@ -435,6 +435,111 @@ footer {
 }
 
 /* =========================================
+   MINECRAFT EASTER EGG
+   ========================================= */
+.minecraft-cv-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 3rem; 
+}
+
+.mc-block {
+    width: 3rem;
+    height: 3rem;
+    background-color: #555; /* Stone color */
+    background-image: 
+        radial-gradient(circle at 20% 20%, var(--accent) 3px, transparent 4px),
+        radial-gradient(circle at 80% 80%, var(--accent) 2px, transparent 3px),
+        radial-gradient(circle at 30% 70%, var(--accent) 3px, transparent 4px),
+        radial-gradient(circle at 70% 30%, var(--accent) 2px, transparent 4px);
+    border: 3px solid #333;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: inset -3px -3px 0px rgba(0,0,0,0.5), inset 3px 3px 0px rgba(255,255,255,0.2);
+    image-rendering: pixelated;
+    transition: transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+}
+
+.mc-block:active {
+    transform: scale(0.92);
+}
+
+.mc-block.cracked-1::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path d="M10,10 L20,30 L15,40" stroke="rgba(0,0,0,0.6)" stroke-width="2" fill="none"/></svg>');
+}
+.mc-block.cracked-2::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path d="M10,10 L20,30 L15,40 M30,10 L40,25 L35,45" stroke="rgba(0,0,0,0.8)" stroke-width="3" fill="none"/></svg>');
+}
+.mc-block.cracked-3::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path d="M10,10 L20,30 L15,40 M30,10 L40,25 L35,45 M5,25 L25,20 L45,15" stroke="black" stroke-width="4" fill="none"/></svg>');
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    20% { transform: translate(-2px, -2px) rotate(-2deg); }
+    40% { transform: translate(-3px, 0px) rotate(2deg); }
+    60% { transform: translate(3px, 2px) rotate(0deg); }
+    80% { transform: translate(1px, -1px) rotate(2deg); }
+    100% { transform: translate(-1px, 2px) rotate(-1deg); }
+}
+
+.mc-block.mining {
+    animation: shake 0.2s;
+}
+
+.mc-block.broken {
+    display: none;
+}
+
+.hidden-cv {
+    display: none !important;
+}
+
+.revealed-cv {
+    display: inline-flex !important;
+    animation: popOut 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popOut {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.mc-label {
+    background: rgba(0,0,0,0.6);
+    color: white;
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Inter', sans-serif;
+    pointer-events: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* =========================================
    RESPONSIVE
    ========================================= */
 @media (max-width: 768px) {
