@@ -300,12 +300,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // 5. Easter Egg 2 — Crafting Table (click items in order)
 document.addEventListener("DOMContentLoaded", () => {
-    const craftCard = document.getElementById("craft-card");
+    // The trigger is now the profile photo instead of a card
+    const heroPhoto = document.querySelector(".hero-photo img");
     const modal = document.getElementById("craft-modal");
     const closeBtn = document.getElementById("craft-close");
     const craftResult = document.getElementById("craft-result");
 
-    if (!craftCard || !modal) return;
+    if (!heroPhoto || !modal) return;
 
     const slotIcons = {
         data: '<div class="mc-slot-icon mc-slot-data"></div>',
@@ -315,11 +316,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const order = ["data", "algo", "coffee"];
     const targetSlots = [1, 4, 7]; // center column: top, middle, bottom
     let step = 0;
+    
+    // Hidden trigger logic
+    let photoClicks = 0;
+    let clickTimer;
 
-    // Open modal
-    craftCard.addEventListener("click", (e) => {
-        e.preventDefault();
-        modal.classList.add("open");
+    heroPhoto.addEventListener("click", (e) => {
+        photoClicks++;
+        
+        // Visual feedback (shake)
+        heroPhoto.style.animation = 'none';
+        void heroPhoto.offsetWidth;
+        heroPhoto.style.animation = 'mc-shake 0.1s';
+
+        clearTimeout(clickTimer);
+        
+        if (photoClicks >= 3) {
+            e.preventDefault();
+            photoClicks = 0; // reset
+            modal.classList.add("open");
+        } else {
+            clickTimer = setTimeout(() => { photoClicks = 0; }, 600);
+        }
     });
 
     // Close modal
