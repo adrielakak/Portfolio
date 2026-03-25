@@ -258,22 +258,46 @@ document.addEventListener("DOMContentLoaded", () => {
     const targetSlots = [1, 4, 7]; // center column: top, middle, bottom
     let step = 0;
     
-    // Hidden trigger logic
-    let photoClicks = 0;
+    // Hidden trigger logic: 3 seconds hold
+    let pressTimer;
+    let isPressed = false;
 
-    heroPhoto.addEventListener("click", (e) => {
-        photoClicks++;
+    const startPress = (e) => {
+        if (e.type === 'mousedown' && e.button !== 0) return; // Only left click
+        isPressed = true;
+        // Visual feedback during hold
+        heroPhoto.style.transition = "transform 3s cubic-bezier(0.2, 0.8, 0.2, 1)";
+        heroPhoto.style.transform = "scale(0.85)";
         
-        // Gentle feedback
-        heroPhoto.style.transform = "scale(0.95)";
-        setTimeout(() => { heroPhoto.style.transform = "scale(1)"; }, 100);
-        
-        if (photoClicks >= 3) {
-            e.preventDefault();
-            photoClicks = 0; // reset
-            modal.classList.add("open");
-        }
-    });
+        pressTimer = setTimeout(() => {
+            if (isPressed) {
+                modal.classList.add("open");
+                cancelPress();
+            }
+        }, 3000);
+    };
+
+    const cancelPress = () => {
+        isPressed = false;
+        clearTimeout(pressTimer);
+        heroPhoto.style.transition = "transform 0.4s ease";
+        heroPhoto.style.transform = "scale(1)";
+    };
+
+    // Prevent context menu to avoid interrupting the hold on mobile
+    heroPhoto.addEventListener("contextmenu", (e) => e.preventDefault());
+
+    // Mouse events
+    heroPhoto.addEventListener("mousedown", startPress);
+    heroPhoto.addEventListener("mouseup", cancelPress);
+    heroPhoto.addEventListener("mouseleave", cancelPress);
+
+    // Touch events for mobile
+    heroPhoto.addEventListener("touchstart", (e) => {
+        startPress(e);
+    }, {passive: true});
+    heroPhoto.addEventListener("touchend", cancelPress);
+    heroPhoto.addEventListener("touchcancel", cancelPress);
 
     // Close modal
     closeBtn.addEventListener("click", () => modal.classList.remove("open"));
