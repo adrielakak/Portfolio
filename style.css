@@ -227,32 +227,33 @@ nav {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    background-color: var(--text-primary);
-    color: var(--bg-main);
-    padding: 0.8rem 1.75rem;
+    background-color: rgba(17, 17, 17, 0.4);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    padding: 0.75rem 1.75rem;
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     text-decoration: none;
-    border-radius: 4px;
-    border: 1px solid transparent;
-    transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    border-radius: 50px;
+    transition: all 0.3s ease;
 }
 
 .cta:hover {
-    background-color: var(--accent);
-    color: #fff;
+    background-color: rgba(22, 22, 22, 0.6);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
 }
 
 .cta-outline {
     background-color: transparent;
-    color: var(--text-primary);
-    border-color: var(--border-color);
+    border-color: rgba(255, 255, 255, 0.05);
 }
 
 .cta-outline:hover {
-    background-color: rgba(255, 255, 255, 0.05); /* Effet hover subtil */
-    border-color: var(--text-secondary);
-    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.03); 
+    border-color: rgba(255, 255, 255, 0.15);
 }
 
 /* =========================================
