@@ -243,22 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
     // The trigger is now the profile photo container
     const heroPhoto = document.querySelector(".hero-photo");
-    const modal = document.getElementById("craft-modal");
-    const closeBtn = document.getElementById("craft-close");
-    const craftResult = document.getElementById("craft-result");
-
-    if (!heroPhoto || !modal) return;
-
-    const slotIcons = {
-        data: '<div class="mc-slot-icon mc-slot-data"></div>',
-        algo: '<div class="mc-slot-icon mc-slot-algo"></div>',
-        coffee: '<div class="mc-slot-icon mc-slot-coffee"></div>'
-    };
-    const order = ["data", "algo", "coffee"];
-    const targetSlots = [1, 4, 7]; // center column: top, middle, bottom
-    let step = 0;
-    
-    // Hidden trigger logic: 3 seconds hold
+    // Redirect to the dedicated crafting page on success
     let pressTimer;
     let isPressed = false;
 
@@ -271,7 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         pressTimer = setTimeout(() => {
             if (isPressed) {
-                modal.classList.add("open");
+                window.location.href = "craft.html";
                 cancelPress();
             }
         }, 3000);
@@ -298,55 +283,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, {passive: true});
     heroPhoto.addEventListener("touchend", cancelPress);
     heroPhoto.addEventListener("touchcancel", cancelPress);
-
-    // Close modal
-    closeBtn.addEventListener("click", () => modal.classList.remove("open"));
-    modal.addEventListener("click", (e) => {
-        if (e.target === modal) modal.classList.remove("open");
-    });
-
-    // Click ingredient in order
-    const items = modal.querySelectorAll(".craft-item");
-    const slots = modal.querySelectorAll(".craft-slot");
-
-    items.forEach(item => {
-        item.addEventListener("click", () => {
-            const ingredient = item.dataset.ingredient;
-            const expectedStep = parseInt(item.dataset.step) - 1;
-
-            // Must click in order
-            if (expectedStep !== step) {
-                // Wrong order: shake the item
-                item.style.animation = 'none';
-                void item.offsetWidth;
-                item.style.animation = 'mc-shake 0.3s';
-                return;
-            }
-
-            // Correct! Place it in the grid
-            const slot = slots[targetSlots[step]];
-            slot.innerHTML = slotIcons[ingredient];
-            slot.classList.add("filled");
-
-            item.classList.add("used");
-            step++;
-
-            // Check if all 3 placed
-            if (step === 3) {
-                setTimeout(() => {
-                    craftResult.innerHTML = '<div class="mc-slot-icon" style="background:#7ab648;border-color:#5a8a36;width:32px;height:32px;"></div>';
-                    craftResult.classList.add("success");
-
-                    setTimeout(() => {
-                        modal.classList.remove("open");
-
-                        // Redirect to the secret page (bypasses popup blockers and leaves main page intact)
-                        window.location.href = "secret.html";
-                    }, 500);
-                }, 400);
-            }
-        });
-    });
 });
 
 // 6. Easter Egg 3 — Nether Portal (One click to activate permanently)

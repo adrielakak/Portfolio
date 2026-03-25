@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table de Craft</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .craft-container {
+            background: #8B7355;
+            background-image:
+                repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(0,0,0,0.05) 10px, rgba(0,0,0,0.05) 12px),
+                repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(0,0,0,0.03) 10px, rgba(0,0,0,0.03) 12px);
+            border: 4px solid #5C3D2E;
+            border-radius: 4px;
+            padding: 0;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 0 0 2px #2E1F16, 0 8px 40px rgba(0, 0, 0, 0.5);
+            image-rendering: auto;
+            position: relative;
+        }
+
+        .craft-title-bar {
+            background: #3C3C3C;
+            color: #fff;
+            padding: 0.6rem 1rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border-bottom: 3px solid #2E1F16;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .craft-close {
+            position: absolute;
+            top: 0.4rem;
+            right: 0.6rem;
+            background: #8B0000;
+            border: 2px solid #5C0000;
+            color: #fff;
+            font-size: 1.1rem;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: background 0.2s;
+            text-decoration: none;
+            line-height: 1;
+        }
+        .craft-close:hover { background: #a00; }
+
+        .craft-body {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .craft-ingredients {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .craft-step-label {
+            color: #2E1F16;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+            margin-top: 0;
+        }
+
+        .craft-item {
+            background: #6B5B45;
+            border: 3px solid #4A3C2A;
+            border-radius: 3px;
+            padding: 0.4rem 0.6rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: #fff;
+            transition: all 0.15s;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: inset -2px -2px 0 rgba(0,0,0,0.3), inset 2px 2px 0 rgba(255,255,255,0.1);
+        }
+        .craft-item:hover { background: #7D6B52; transform: scale(1.05); border-color: #d4a05a; }
+        .craft-item.used { opacity: 0.3; pointer-events: none; filter: grayscale(1); }
+
+        .craft-step-num {
+            background: #4A3C2A;
+            color: #d4a05a;
+            width: 18px;
+            height: 18px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Minecraft pixel-art block icons (pure CSS) */
+        .mc-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid;
+            border-radius: 2px;
+            flex-shrink: 0;
+            image-rendering: pixelated;
+            box-shadow: inset -1px -1px 0 rgba(0,0,0,0.4), inset 1px 1px 0 rgba(255,255,255,0.2);
+        }
+
+        .mc-icon-data {
+            background: #555;
+            border-color: #333;
+            background-image:
+                radial-gradient(circle at 30% 30%, #2563eb 3px, transparent 3px),
+                radial-gradient(circle at 70% 70%, #2563eb 2px, transparent 2px);
+        }
+
+        .mc-icon-algo {
+            background: #555;
+            border-color: #333;
+            background-image:
+                radial-gradient(circle at 40% 60%, #dc2626 3px, transparent 3px),
+                radial-gradient(circle at 70% 30%, #dc2626 2px, transparent 2px);
+        }
+
+        .mc-icon-coffee {
+            background: #6B3A1F;
+            border-color: #4A2810;
+            background-image:
+                radial-gradient(circle at 50% 50%, #8B4C26 3px, transparent 4px);
+        }
+
+        .mc-icon-craft {
+            background: #8B7355;
+            border-color: #5C3D2E;
+            background-image:
+                linear-gradient(90deg, #6B5B45 1px, transparent 1px),
+                linear-gradient(0deg, #6B5B45 1px, transparent 1px);
+            background-size: 4px 4px;
+        }
+
+        .mc-slot-icon {
+            width: 28px;
+            height: 28px;
+            border: 2px solid;
+            border-radius: 2px;
+            box-shadow: inset -1px -1px 0 rgba(0,0,0,0.4), inset 1px 1px 0 rgba(255,255,255,0.2);
+        }
+
+        .mc-slot-data {
+            background: #555;
+            border-color: #333;
+            background-image:
+                radial-gradient(circle at 30% 30%, #2563eb 4px, transparent 4px),
+                radial-gradient(circle at 70% 70%, #2563eb 3px, transparent 3px);
+        }
+
+        .mc-slot-algo {
+            background: #555;
+            border-color: #333;
+            background-image:
+                radial-gradient(circle at 40% 60%, #dc2626 4px, transparent 4px),
+                radial-gradient(circle at 70% 30%, #dc2626 3px, transparent 3px);
+        }
+
+        .mc-slot-coffee {
+            background: #6B3A1F;
+            border-color: #4A2810;
+            background-image:
+                radial-gradient(circle at 50% 50%, #8B4C26 5px, transparent 6px);
+        }
+
+        .craft-grid-wrapper {
+            background: #6B5B45;
+            border: 3px solid #4A3C2A;
+            border-radius: 3px;
+            padding: 4px;
+            box-shadow: inset -2px -2px 0 rgba(0,0,0,0.3), inset 2px 2px 0 rgba(255,255,255,0.1);
+        }
+
+        .craft-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+        }
+
+        .craft-slot {
+            width: 44px;
+            height: 44px;
+            background: #373737;
+            border: 2px solid #1a1a1a;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: inset 2px 2px 0 rgba(255,255,255,0.05);
+        }
+        .craft-slot.filled { border-color: #7ab648; background: #2a3a22; }
+
+        .craft-output {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .craft-arrow {
+            font-size: 1.5rem;
+            color: #2E1F16;
+            margin: 0 0.5rem;
+        }
+
+        .craft-result {
+            width: 52px;
+            height: 52px;
+            background: #373737;
+            border: 3px solid #4A3C2A;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: #666;
+            box-shadow: inset -2px -2px 0 rgba(0,0,0,0.3), inset 2px 2px 0 rgba(255,255,255,0.05);
+        }
+
+        .craft-result.success {
+            border-color: #7ab648;
+            background: #2a3a22;
+            animation: craftSuccess 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes craftSuccess {
+            0% { transform: scale(0.5); } 50% { transform: scale(1.2); } 100% { transform: scale(1); }
+        }
+
+        @keyframes mc-shake {
+            0% { transform: translate(1px, 1px); }
+            20% { transform: translate(-2px, -2px) rotate(-1deg); }
+            40% { transform: translate(-3px, 0px) rotate(1deg); }
+            60% { transform: translate(3px, 2px); }
+            80% { transform: translate(1px, -1px) rotate(1deg); }
+            100% { transform: translate(0, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="craft-container">
+        <a href="index.html" class="craft-close" title="Fermer">&times;</a>
+        <div class="craft-title-bar"><span class="mc-icon mc-icon-craft"></span> Table de Craft</div>
+        
+        <div class="craft-body">
+            <!-- Ingredients -->
+            <div class="craft-ingredients">
+                <p class="craft-step-label">Clique dans l'ordre :</p>
+                <div class="craft-item" data-ingredient="data" data-step="1">
+                    <span class="craft-step-num">1</span>
+                    <span class="mc-icon mc-icon-data"></span>
+                    <span>Données</span>
+                </div>
+                <div class="craft-item" data-ingredient="algo" data-step="2">
+                    <span class="craft-step-num">2</span>
+                    <span class="mc-icon mc-icon-algo"></span>
+                    <span>Algorithme</span>
+                </div>
+                <div class="craft-item" data-ingredient="coffee" data-step="3">
+                    <span class="craft-step-num">3</span>
+                    <span class="mc-icon mc-icon-coffee"></span>
+                    <span>Café</span>
+                </div>
+            </div>
+
+            <!-- Grid -->
+            <div class="craft-grid-wrapper">
+                <div class="craft-grid" id="craft-grid">
+                    <div class="craft-slot"></div>
+                    <div class="craft-slot"></div>
+                    <div class="craft-slot"></div>
+                    <div class="craft-slot"></div>
+                    <div class="craft-slot"></div>
+                    <div class="craft-slot"></div>
+                    <div class="craft-slot"></div>
+                    <div class="craft-slot"></div>
+                    <div class="craft-slot"></div>
+                </div>
+            </div>
+
+            <!-- Output -->
+            <div class="craft-output">
+                <div class="craft-arrow">➡</div>
+                <div class="craft-result" id="craft-result">?</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const items = document.querySelectorAll(".craft-item");
+            const slots = document.querySelectorAll(".craft-slot");
+            const craftResult = document.getElementById("craft-result");
+            
+            const slotIcons = {
+                data: '<div class="mc-slot-icon mc-slot-data"></div>',
+                algo: '<div class="mc-slot-icon mc-slot-algo"></div>',
+                coffee: '<div class="mc-slot-icon mc-slot-coffee"></div>'
+            };
+            const targetSlots = [1, 4, 7];
+            let step = 0;
+
+            items.forEach(item => {
+                item.addEventListener("click", () => {
+                    const ingredient = item.dataset.ingredient;
+                    const expectedStep = parseInt(item.dataset.step) - 1;
+
+                    if (expectedStep !== step) {
+                        item.style.animation = 'none';
+                        void item.offsetWidth;
+                        item.style.animation = 'mc-shake 0.3s';
+                        return;
+                    }
+
+                    const slot = slots[targetSlots[step]];
+                    slot.innerHTML = slotIcons[ingredient];
+                    slot.classList.add("filled");
+
+                    item.classList.add("used");
+                    step++;
+
+                    if (step === 3) {
+                        setTimeout(() => {
+                            craftResult.innerHTML = '<div class="mc-slot-icon" style="background:#7ab648;border-color:#5a8a36;width:32px;height:32px;"></div>';
+                            craftResult.classList.add("success");
+
+                            setTimeout(() => {
+                                window.location.replace("secret.html");
+                            }, 800);
+                        }, 400);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
