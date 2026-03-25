@@ -424,6 +424,16 @@ footer {
 }
 
 /* =========================================
+   TYPING
+   ========================================= */
+.text-type__cursor {
+    margin-left: 0.25rem;
+    display: inline-block;
+    color: var(--accent);
+    opacity: 1;
+}
+
+/* =========================================
    RESPONSIVE
    ========================================= */
 @media (max-width: 768px) {
