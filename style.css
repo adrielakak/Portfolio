@@ -452,14 +452,10 @@ footer {
 
     .nav-links {
         display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
         width: 100%;
-        overflow-x: auto;
-        white-space: nowrap;
-        gap: 1rem;
-        padding-bottom: 0.25rem;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-        justify-content: flex-start;
+        gap: 0.5rem 0.8rem;
     }
 
     .nav-links::-webkit-scrollbar {
@@ -467,7 +463,7 @@ footer {
     }
 
     .nav-links a {
-        font-size: 0.85rem;
+        font-size: 0.75rem;
     }
 
     .hero {
@@ -506,5 +502,10 @@ footer {
     .skills-grid, .projects-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+
+    .contact-link {
+        font-size: 1.1rem;
+        word-break: break-word;
     }
 }
