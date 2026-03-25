@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 scrollTrigger: {
                     trigger: sec,
                     start: "top 80%",
-                    toggleActions: "play none none reverse"
+                    once: true
                 }
             }
         );
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 scrollTrigger: {
                     trigger: ".projects-grid",
                     start: "top 85%",
-                    toggleActions: "play none none reverse"
+                    once: true
                 }
             }
         );
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 scrollTrigger: {
                     trigger: ".skills-grid",
                     start: "top 85%",
-                    toggleActions: "play none none reverse"
+                    once: true
                 }
             }
         );
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 scrollTrigger: {
                     trigger: entry,
                     start: "top 85%",
-                    toggleActions: "play none none reverse"
+                    once: true
                 }
             }
         );
@@ -185,17 +185,19 @@ class TextType {
 document.addEventListener("DOMContentLoaded", () => {
     const title = document.querySelector(".hero h1");
     if(title) {
-        const frText = title.getAttribute("data-fr") || "Adriel Kourlate";
-        const enText = title.getAttribute("data-en") || "Adriel Kourlate";
+        const frTexts = ["Adriel Kourlate", "Data Analyst", "Développeur"];
+        const enTexts = ["Adriel Kourlate", "Data Analyst", "Developer"];
+
+        const currentLang = document.documentElement.lang || 'fr';
 
         // The TextType instance 
         let typer = new TextType(title, {
-            texts: [frText], // Wait, we can add a few extra texts like the original React Bits demo
+            texts: currentLang === 'fr' ? frTexts : enTexts,
             typingSpeed: 75,
             deletingSpeed: 50,
-            pauseDuration: 3000,
+            pauseDuration: 2500,
             cursorCharacter: "_",
-            loop: false // Set to true if you want it to delete and retype infinitely
+            loop: true // Enable infinite loop
         });
 
         // Listen to language toggle
@@ -203,9 +205,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if(toggleBtn) {
             toggleBtn.addEventListener('click', () => {
                 setTimeout(() => {
-                    const currentLang = document.documentElement.lang || 'fr';
-                    const newText = currentLang === 'fr' ? frText : enText;
-                    typer.reset([newText]);
+                    const newLang = document.documentElement.lang || 'fr';
+                    typer.reset(newLang === 'fr' ? frTexts : enTexts);
                 }, 10);
             });
         }
