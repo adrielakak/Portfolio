@@ -435,108 +435,287 @@ footer {
 }
 
 /* =========================================
-   MINECRAFT EASTER EGG
+   EASTER EGG 1: DIAMOND CV BUTTON
    ========================================= */
-.minecraft-cv-container {
+.mc-cv-btn {
     position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 3rem; 
+    overflow: hidden;
+    border: 1px solid rgba(55, 205, 235, 0.3) !important;
+    transition: all 0.3s ease;
 }
 
-.mc-block {
-    width: 3rem;
-    height: 3rem;
-    background-color: #555; /* Stone color */
-    background-image: 
-        radial-gradient(circle at 20% 20%, var(--accent) 3px, transparent 4px),
-        radial-gradient(circle at 80% 80%, var(--accent) 2px, transparent 3px),
-        radial-gradient(circle at 30% 70%, var(--accent) 3px, transparent 4px),
-        radial-gradient(circle at 70% 30%, var(--accent) 2px, transparent 4px);
-    border: 3px solid #333;
-    border-radius: 6px;
+.mc-cv-btn::before {
+    content: '💎';
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mc-cv-btn::after {
+    content: '💎';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mc-cv-btn:hover {
+    border-color: rgba(55, 205, 235, 0.6) !important;
+    box-shadow: 0 0 20px rgba(55, 205, 235, 0.15), inset 0 0 15px rgba(55, 205, 235, 0.05);
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text y="24" font-size="24">⛏️</text></svg>') 4 4, pointer;
+}
+
+.mc-cv-btn:hover::before,
+.mc-cv-btn:hover::after {
+    opacity: 1;
+}
+
+.mc-cv-btn.mining-effect {
+    animation: mc-mine-shake 0.15s;
+}
+
+@keyframes mc-mine-shake {
+    0% { transform: translate(1px, 1px); }
+    25% { transform: translate(-2px, -1px); }
+    50% { transform: translate(-1px, 2px); }
+    75% { transform: translate(2px, 0px); }
+    100% { transform: translate(0, 0); }
+}
+
+/* =========================================
+   EASTER EGG 2: CRAFTING TABLE
+   ========================================= */
+.craft-card {
     cursor: pointer;
-    box-shadow: inset -3px -3px 0px rgba(0,0,0,0.5), inset 3px 3px 0px rgba(255,255,255,0.2);
-    image-rendering: pixelated;
-    transition: transform 0.1s;
+    border-color: rgba(139, 90, 43, 0.5) !important;
+    transition: all 0.3s ease;
+}
+
+.craft-card:hover {
+    border-color: rgba(139, 90, 43, 0.9) !important;
+    box-shadow: 0 0 20px rgba(139, 90, 43, 0.15);
+}
+
+.craft-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.craft-modal.open {
+    display: flex;
+}
+
+.craft-modal-content {
+    background: #2c2c2e;
+    border: 2px solid #5a3a1a;
+    border-radius: 12px;
+    padding: 2.5rem;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 0 60px rgba(139, 90, 43, 0.3);
+}
+
+.craft-modal-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: #d4a05a;
+}
+
+.craft-instruction {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+}
+
+.craft-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.craft-close:hover { color: var(--text-primary); }
+
+.craft-area {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.craft-ingredients {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.craft-item {
+    background: #3a3a3c;
+    border: 2px solid #555;
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    cursor: grab;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    transition: all 0.2s;
+    user-select: none;
+}
+.craft-item:hover { border-color: #d4a05a; transform: scale(1.05); }
+.craft-item:active { cursor: grabbing; }
+.craft-item.used { opacity: 0.3; pointer-events: none; }
+
+.craft-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+}
+
+.craft-slot {
+    width: 50px;
+    height: 50px;
+    background: #1c1c1e;
+    border: 2px solid #444;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+.craft-slot:hover { border-color: #d4a05a; }
+.craft-slot.filled { border-color: #7ab648; background: #2a3a22; }
+
+.craft-arrow {
+    font-size: 2rem;
+    color: #d4a05a;
+    animation: craftPulse 1.5s ease-in-out infinite;
+}
+@keyframes craftPulse {
+    0%, 100% { opacity: 0.5; } 50% { opacity: 1; }
+}
+
+.craft-result {
+    width: 60px;
+    height: 60px;
+    background: #1c1c1e;
+    border: 3px solid #555;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+}
+
+.craft-result.success {
+    border-color: #7ab648;
+    background: #2a3a22;
+    animation: craftSuccess 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes craftSuccess {
+    0% { transform: scale(0.5); } 50% { transform: scale(1.2); } 100% { transform: scale(1); }
+}
+
+/* =========================================
+   EASTER EGG 3: NETHER PORTAL
+   ========================================= */
+.nether-portal-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+}
+
+.obsidian-block {
+    width: 40px;
+    height: 40px;
+    background: #0d0016;
+    border: 3px solid #1a0a2e;
+    border-radius: 4px;
+    cursor: pointer;
     position: relative;
     overflow: hidden;
-    user-select: none;
+    box-shadow: inset -2px -2px 0 rgba(0,0,0,0.6), inset 2px 2px 0 rgba(80, 30, 120, 0.3);
+    transition: all 0.2s;
 }
 
-.mc-block:active {
-    transform: scale(0.92);
+.obsidian-block:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(128, 0, 255, 0.3), inset -2px -2px 0 rgba(0,0,0,0.6), inset 2px 2px 0 rgba(80, 30, 120, 0.3);
 }
 
-.mc-block.cracked-1::after {
-    content: '';
-    position: absolute;
-    inset: 0;
+.obsidian-block:active {
+    transform: scale(0.95);
+}
+
+.obsidian-texture {
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle at 20% 40%, rgba(128, 0, 255, 0.2) 1px, transparent 2px),
+        radial-gradient(circle at 70% 20%, rgba(128, 0, 255, 0.15) 1px, transparent 2px),
+        radial-gradient(circle at 50% 80%, rgba(128, 0, 255, 0.2) 1px, transparent 2px);
+}
+
+.obsidian-hint {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    font-style: italic;
+}
+
+.obsidian-block.activating {
+    animation: obsidianPulse 0.3s;
+}
+
+@keyframes obsidianPulse {
+    0% { box-shadow: 0 0 5px rgba(128, 0, 255, 0.3); }
+    50% { box-shadow: 0 0 25px rgba(128, 0, 255, 0.6); }
+    100% { box-shadow: 0 0 5px rgba(128, 0, 255, 0.3); }
+}
+
+/* Nether mode global overrides */
+body.nether-mode {
+    --accent: #8b00ff;
+    --accent-hover: #a855f7;
+}
+
+body.nether-mode #bg-canvas {
+    opacity: 0.5;
+    transition: opacity 1s ease;
+}
+
+.nether-particle {
+    position: fixed;
+    width: 3px;
+    height: 3px;
+    background: #8b00ff;
+    border-radius: 50%;
     pointer-events: none;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path d="M10,10 L20,30 L15,40" stroke="rgba(0,0,0,0.6)" stroke-width="2" fill="none"/></svg>');
-}
-.mc-block.cracked-2::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path d="M10,10 L20,30 L15,40 M30,10 L40,25 L35,45" stroke="rgba(0,0,0,0.8)" stroke-width="3" fill="none"/></svg>');
-}
-.mc-block.cracked-3::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path d="M10,10 L20,30 L15,40 M30,10 L40,25 L35,45 M5,25 L25,20 L45,15" stroke="black" stroke-width="4" fill="none"/></svg>');
-}
-
-@keyframes shake {
-    0% { transform: translate(1px, 1px) rotate(0deg); }
-    20% { transform: translate(-2px, -2px) rotate(-2deg); }
-    40% { transform: translate(-3px, 0px) rotate(2deg); }
-    60% { transform: translate(3px, 2px) rotate(0deg); }
-    80% { transform: translate(1px, -1px) rotate(2deg); }
-    100% { transform: translate(-1px, 2px) rotate(-1deg); }
-}
-
-.mc-block.mining {
-    animation: shake 0.2s;
-}
-
-.mc-block.broken {
-    display: none;
-}
-
-.hidden-cv {
-    display: none !important;
-}
-
-.revealed-cv {
-    display: inline-flex !important;
-    animation: popOut 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-@keyframes popOut {
-    0% { transform: scale(0); opacity: 0; }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-.mc-label {
-    background: rgba(0,0,0,0.6);
-    color: white;
-    font-size: 0.65rem;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: 'Inter', sans-serif;
-    pointer-events: none;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    z-index: 999;
+    box-shadow: 0 0 6px rgba(139, 0, 255, 0.6);
 }
 
 /* =========================================

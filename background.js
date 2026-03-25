@@ -219,3 +219,12 @@ function animate() {
   composer.render();
 }
 animate();
+
+// Listen for Nether Portal Easter Egg
+const BLUE_COLOR = [37/255, 99/255, 235/255];
+const PURPLE_COLOR = [139/255, 0, 255/255];
+
+window.addEventListener('nether-mode', (e) => {
+  const target = e.detail.active ? PURPLE_COLOR : BLUE_COLOR;
+  uniforms.waveColor.value.set(...target);
+});

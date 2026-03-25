@@ -237,71 +237,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// 4. Minecraft Easter Egg (Mining CV)
+// 4. Easter Egg 1 — Diamond CV Button (Mining effect on click)
 document.addEventListener("DOMContentLoaded", () => {
-    const mcBlock = document.getElementById("mc-block");
     const cvBtn = document.getElementById("mc-cv-btn");
-    let clicks = 0;
-    
-    if (mcBlock && cvBtn) {
-        mcBlock.addEventListener("click", () => {
-            clicks++;
-            
-            // Add shake class
-            mcBlock.classList.remove("mining");
-            void mcBlock.offsetWidth; // trigger reflow
-            mcBlock.classList.add("mining");
+    if (!cvBtn) return;
 
-            // Cracks
-            if (clicks === 1) mcBlock.classList.add("cracked-1");
-            if (clicks === 2) {
-                mcBlock.classList.remove("cracked-1");
-                mcBlock.classList.add("cracked-2");
-            }
-            if (clicks === 3) {
-                mcBlock.classList.remove("cracked-2");
-                mcBlock.classList.add("cracked-3");
-            }
-            
-            if (clicks >= 4) {
-                // Break block!
-                mcBlock.style.opacity = 0;
-                setTimeout(() => {
-                    mcBlock.classList.add("broken");
-                    cvBtn.classList.remove("hidden-cv");
-                    cvBtn.classList.add("revealed-cv");
-                }, 50);
-                
-                // Add particle effects
-                createParticles(mcBlock);
-            }
-        });
-    }
+    cvBtn.addEventListener("click", (e) => {
+        // Shake effect
+        cvBtn.classList.remove("mining-effect");
+        void cvBtn.offsetWidth;
+        cvBtn.classList.add("mining-effect");
 
-    function createParticles(block) {
-        const rect = block.getBoundingClientRect();
-        const container = document.body;
-        for (let i = 0; i < 12; i++) {
+        // Spawn diamond particles from the button
+        const rect = cvBtn.getBoundingClientRect();
+        for (let i = 0; i < 8; i++) {
             const particle = document.createElement('div');
-            particle.style.position = 'absolute';
-            particle.style.width = (4 + Math.random() * 6) + 'px';
+            particle.style.position = 'fixed';
+            particle.style.width = (3 + Math.random() * 5) + 'px';
             particle.style.height = particle.style.width;
-            // Mixed colors: stone and accent
-            particle.style.backgroundColor = Math.random() > 0.6 ? 'var(--accent)' : '#555'; 
-            particle.style.left = (rect.left + rect.width / 2) + window.scrollX + 'px';
-            particle.style.top = (rect.top + rect.height / 2) + window.scrollY + 'px';
+            particle.style.backgroundColor = Math.random() > 0.5 ? '#37cdeb' : '#5ce1f5';
+            particle.style.left = (rect.left + Math.random() * rect.width) + 'px';
+            particle.style.top = (rect.top + Math.random() * rect.height) + 'px';
             particle.style.zIndex = 1000;
             particle.style.borderRadius = '2px';
-            container.appendChild(particle);
-
-            const angle = Math.random() * Math.PI * 2;
-            const velocity = 30 + Math.random() * 50;
-            const tx = Math.cos(angle) * velocity;
-            const ty = Math.sin(angle) * velocity - 40; // upward bias
+            particle.style.pointerEvents = 'none';
+            document.body.appendChild(particle);
 
             gsap.to(particle, {
-                x: tx,
-                y: ty,
+                x: (Math.random() - 0.5) * 80,
+                y: -(20 + Math.random() * 60),
                 rotation: Math.random() * 360,
                 opacity: 0,
                 duration: 0.6 + Math.random() * 0.4,
@@ -309,5 +273,215 @@ document.addEventListener("DOMContentLoaded", () => {
                 onComplete: () => particle.remove()
             });
         }
+    });
+});
+
+// 5. Easter Egg 2 — Crafting Table
+document.addEventListener("DOMContentLoaded", () => {
+    const craftCard = document.getElementById("craft-card");
+    const modal = document.getElementById("craft-modal");
+    const closeBtn = document.getElementById("craft-close");
+    const craftResult = document.getElementById("craft-result");
+
+    if (!craftCard || !modal) return;
+
+    const correctOrder = ["data", "algo", "coffee"]; // top-center, middle-center, bottom-center (slots 1, 4, 7)
+    const correctSlots = [1, 4, 7];
+    const icons = { data: "📊", algo: "🧠", coffee: "☕" };
+    let currentIngredient = null;
+    let placedCount = 0;
+    let placedIngredients = {};
+
+    // Open modal
+    craftCard.addEventListener("click", (e) => {
+        e.preventDefault();
+        modal.classList.add("open");
+    });
+
+    // Close modal
+    closeBtn.addEventListener("click", () => modal.classList.remove("open"));
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) modal.classList.remove("open");
+    });
+
+    // Click ingredient to select it
+    const items = modal.querySelectorAll(".craft-item");
+    items.forEach(item => {
+        item.addEventListener("click", () => {
+            if (item.classList.contains("used")) return;
+            // Deselect previously selected
+            items.forEach(i => i.style.outline = 'none');
+            item.style.outline = '2px solid #d4a05a';
+            currentIngredient = item.dataset.ingredient;
+        });
+    });
+
+    // Click slot to place ingredient
+    const slots = modal.querySelectorAll(".craft-slot");
+    slots.forEach(slot => {
+        slot.addEventListener("click", () => {
+            if (!currentIngredient || slot.classList.contains("filled")) return;
+
+            const slotIndex = parseInt(slot.dataset.slot);
+            slot.textContent = icons[currentIngredient];
+            slot.classList.add("filled");
+
+            placedIngredients[slotIndex] = currentIngredient;
+            placedCount++;
+
+            // Mark ingredient as used
+            const usedItem = modal.querySelector(`.craft-item[data-ingredient="${currentIngredient}"]`);
+            usedItem.classList.add("used");
+            usedItem.style.outline = 'none';
+            currentIngredient = null;
+
+            // Check if all 3 placed
+            if (placedCount === 3) {
+                checkRecipe();
+            }
+        });
+    });
+
+    function checkRecipe() {
+        const isCorrect = correctSlots.every((slotIdx, i) => {
+            return placedIngredients[slotIdx] === correctOrder[i];
+        });
+
+        setTimeout(() => {
+            if (isCorrect) {
+                craftResult.innerHTML = "🎮";
+                craftResult.classList.add("success");
+
+                // After a short delay, reveal the secret project
+                setTimeout(() => {
+                    modal.classList.remove("open");
+                    revealSecretProject();
+                }, 1500);
+            } else {
+                craftResult.innerHTML = "❌";
+                // Reset after a moment
+                setTimeout(resetCraft, 1200);
+            }
+        }, 400);
+    }
+
+    function resetCraft() {
+        placedCount = 0;
+        placedIngredients = {};
+        currentIngredient = null;
+        craftResult.innerHTML = "<span>?</span>";
+        craftResult.classList.remove("success");
+        slots.forEach(s => { s.textContent = ""; s.classList.remove("filled"); });
+        items.forEach(i => { i.classList.remove("used"); i.style.outline = 'none'; });
+    }
+
+    function revealSecretProject() {
+        const lang = document.documentElement.lang || 'fr';
+        craftCard.style.borderStyle = 'solid';
+        craftCard.style.borderColor = 'rgba(122, 182, 72, 0.6)';
+        craftCard.style.boxShadow = '0 0 25px rgba(122, 182, 72, 0.15)';
+        craftCard.innerHTML = `
+            <h3>🎮 Projet-Dame-</h3>
+            <div class="subtitle">Python · Easter Egg</div>
+            <p>${lang === 'fr'
+                ? 'Bravo ! Vous avez crafté un secret ! Ce jeu de dames a été codé en Python avec logique de grille mathématique. Un clin d\'oeil à ma passion pour Minecraft et le gaming !'
+                : 'Congrats! You crafted a secret! This checkers game was coded in Python with mathematical grid logic. A nod to my passion for Minecraft and gaming!'
+            }</p>
+            <a href="https://github.com/adrielakak/Projet-Dame-" target="_blank" style="color: var(--accent); text-decoration: underline; font-size: 0.9rem; margin-top: 0.5rem; display: inline-block;">${lang === 'fr' ? 'Voir sur GitHub →' : 'View on GitHub →'}</a>
+        `;
+        gsap.fromTo(craftCard, { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" });
     }
 });
+
+// 6. Easter Egg 3 — Nether Portal (Obsidian Block)
+document.addEventListener("DOMContentLoaded", () => {
+    const obsidian = document.getElementById("obsidian-block");
+    if (!obsidian) return;
+
+    let clicks = 0;
+    const REQUIRED_CLICKS = 5;
+    let netherActive = false;
+    let particleInterval = null;
+
+    obsidian.addEventListener("click", () => {
+        clicks++;
+
+        // Pulse animation
+        obsidian.classList.remove("activating");
+        void obsidian.offsetWidth;
+        obsidian.classList.add("activating");
+
+        // Visual feedback: glow increases
+        const progress = clicks / REQUIRED_CLICKS;
+        obsidian.style.boxShadow = `0 0 ${10 + progress * 30}px rgba(128, 0, 255, ${0.2 + progress * 0.5}), inset -2px -2px 0 rgba(0,0,0,0.6), inset 2px 2px 0 rgba(80, 30, 120, 0.3)`;
+
+        if (clicks >= REQUIRED_CLICKS && !netherActive) {
+            activateNether();
+        } else if (clicks >= REQUIRED_CLICKS * 2 && netherActive) {
+            deactivateNether();
+            clicks = 0;
+        }
+    });
+
+    function activateNether() {
+        netherActive = true;
+        document.body.classList.add("nether-mode");
+
+        // Update hint text
+        const hint = document.querySelector(".obsidian-hint");
+        if (hint) {
+            const lang = document.documentElement.lang || 'fr';
+            hint.textContent = lang === 'fr' ? 'Portail activé ! Cliquez encore pour revenir...' : 'Portal activated! Click again to go back...';
+            hint.style.opacity = '1';
+            hint.style.color = '#8b00ff';
+        }
+
+        // Update background shader color to purple
+        // The background.js exposes uniforms on the global scope via the canvas
+        // We'll dispatch a custom event
+        window.dispatchEvent(new CustomEvent('nether-mode', { detail: { active: true } }));
+
+        // Spawn floating particles
+        particleInterval = setInterval(spawnNetherParticle, 200);
+
+        // Flash effect
+        gsap.fromTo(document.body, { opacity: 0.5 }, { opacity: 1, duration: 0.5 });
+    }
+
+    function deactivateNether() {
+        netherActive = false;
+        document.body.classList.remove("nether-mode");
+
+        const hint = document.querySelector(".obsidian-hint");
+        if (hint) {
+            const lang = document.documentElement.lang || 'fr';
+            hint.textContent = lang === 'fr' ? 'Un bloc mystérieux...' : 'A mysterious block...';
+            hint.style.opacity = '0.5';
+            hint.style.color = 'var(--text-secondary)';
+        }
+
+        window.dispatchEvent(new CustomEvent('nether-mode', { detail: { active: false } }));
+        if (particleInterval) clearInterval(particleInterval);
+
+        // Remove existing particles
+        document.querySelectorAll('.nether-particle').forEach(p => p.remove());
+    }
+
+    function spawnNetherParticle() {
+        const particle = document.createElement('div');
+        particle.className = 'nether-particle';
+        particle.style.left = Math.random() * window.innerWidth + 'px';
+        particle.style.top = window.innerHeight + 'px';
+        document.body.appendChild(particle);
+
+        gsap.to(particle, {
+            y: -(window.innerHeight + 50),
+            x: (Math.random() - 0.5) * 100,
+            opacity: 0,
+            duration: 3 + Math.random() * 3,
+            ease: "none",
+            onComplete: () => particle.remove()
+        });
+    }
+});
+
