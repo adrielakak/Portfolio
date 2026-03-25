@@ -363,23 +363,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     setTimeout(() => {
                         modal.classList.remove("open");
 
-                        // Update card with Ender Dragon message
-                        const lang = document.documentElement.lang || 'fr';
-                        craftCard.style.borderStyle = 'solid';
-                        craftCard.style.borderColor = 'rgba(122, 182, 72, 0.6)';
-                        craftCard.style.boxShadow = '0 0 25px rgba(122, 182, 72, 0.15)';
-                        craftCard.innerHTML = `
-                            <h3>${lang === 'fr' ? 'Dragon de l\'Ender vaincu !' : 'Ender Dragon defeated!'}</h3>
-                            <div class="subtitle">${lang === 'fr' ? 'Merci d\'avoir exploré mon site !' : 'Thanks for exploring my site!'}</div>
-                            <p>${lang === 'fr' ? 'Félicitations aventurier, tu as crafté la victoire. Voici ta récompense...' : 'Congratulations adventurer, you crafted victory. Here is your reward...'}</p>
-                        `;
-                        gsap.fromTo(craftCard, { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" });
-
-                        // Rickroll after a short delay
-                        setTimeout(() => {
-                            window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ&autoplay=1", "_blank");
-                        }, 1500);
-                    }, 1200);
+                        // Redirect to the secret page (bypasses popup blockers and leaves main page intact)
+                        window.location.href = "secret.html";
+                    }, 500);
                 }, 400);
             }
         });
