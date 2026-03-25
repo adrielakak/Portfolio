@@ -212,3 +212,27 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 });
+
+// 3. Header Auto-Hide on Scroll
+document.addEventListener("DOMContentLoaded", () => {
+    let lastScrollY = window.scrollY;
+    const header = document.querySelector('header');
+    
+    if (header) {
+        // Ensure the header transitions smoothly
+        header.style.transition = "background-color 0.3s ease, border-color 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)";
+        
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+            
+            // Only hide when scrolling down past 100px, show when scrolling up
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                header.style.transform = 'translateX(-50%) translateY(-150%)'; // Hide up
+            } else {
+                header.style.transform = 'translateX(-50%) translateY(0)'; // Show
+            }
+            
+            lastScrollY = currentScrollY;
+        }, { passive: true });
+    }
+});
