@@ -362,29 +362,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     setTimeout(() => {
                         modal.classList.remove("open");
-                        revealSecretProject();
+
+                        // Update card with Ender Dragon message
+                        const lang = document.documentElement.lang || 'fr';
+                        craftCard.style.borderStyle = 'solid';
+                        craftCard.style.borderColor = 'rgba(122, 182, 72, 0.6)';
+                        craftCard.style.boxShadow = '0 0 25px rgba(122, 182, 72, 0.15)';
+                        craftCard.innerHTML = `
+                            <h3>${lang === 'fr' ? 'Dragon de l\'Ender vaincu !' : 'Ender Dragon defeated!'}</h3>
+                            <div class="subtitle">${lang === 'fr' ? 'Merci d\'avoir exploré mon site !' : 'Thanks for exploring my site!'}</div>
+                            <p>${lang === 'fr' ? 'Félicitations aventurier, tu as crafté la victoire. Voici ta récompense...' : 'Congratulations adventurer, you crafted victory. Here is your reward...'}</p>
+                        `;
+                        gsap.fromTo(craftCard, { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" });
+
+                        // Rickroll after a short delay
+                        setTimeout(() => {
+                            window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ&autoplay=1", "_blank");
+                        }, 1500);
                     }, 1200);
                 }, 400);
             }
         });
     });
-
-    function revealSecretProject() {
-        const lang = document.documentElement.lang || 'fr';
-        craftCard.style.borderStyle = 'solid';
-        craftCard.style.borderColor = 'rgba(122, 182, 72, 0.6)';
-        craftCard.style.boxShadow = '0 0 25px rgba(122, 182, 72, 0.15)';
-        craftCard.innerHTML = `
-            <h3>Projet-Dame-</h3>
-            <div class="subtitle">Python · Easter Egg</div>
-            <p>${lang === 'fr'
-                ? 'Bravo ! Vous avez crafté un secret ! Ce jeu de dames a été codé en Python avec logique de grille mathématique. Un clin d\'oeil à ma passion pour Minecraft et le gaming !'
-                : 'Congrats! You crafted a secret! This checkers game was coded in Python with mathematical grid logic. A nod to my passion for Minecraft and gaming!'
-            }</p>
-            <a href="https://github.com/adrielakak/Projet-Dame-" target="_blank" style="color: var(--accent); text-decoration: underline; font-size: 0.9rem; margin-top: 0.5rem; display: inline-block;">${lang === 'fr' ? 'Voir sur GitHub →' : 'View on GitHub →'}</a>
-        `;
-        gsap.fromTo(craftCard, { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" });
-    }
 });
 
 // 6. Easter Egg 3 — Nether Portal (One click to activate permanently)
