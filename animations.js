@@ -237,71 +237,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// 4. Easter Egg 1 — Mining Block CV (crack to reveal)
-document.addEventListener("DOMContentLoaded", () => {
-    const mcBlock = document.getElementById("mc-block");
-    const cvBtn = document.getElementById("mc-cv-btn");
-    let clicks = 0;
-
-    if (!mcBlock || !cvBtn) return;
-
-    mcBlock.addEventListener("click", () => {
-        clicks++;
-
-        // Shake
-        mcBlock.classList.remove("mining");
-        void mcBlock.offsetWidth;
-        mcBlock.classList.add("mining");
-
-        // Cracks
-        mcBlock.classList.remove("cracked-1", "cracked-2", "cracked-3");
-        if (clicks === 1) mcBlock.classList.add("cracked-1");
-        if (clicks === 2) mcBlock.classList.add("cracked-2");
-        if (clicks === 3) mcBlock.classList.add("cracked-3");
-
-        if (clicks >= 4) {
-            // Break block and reveal CV button
-            mcBlock.style.opacity = '0';
-            mcBlock.style.transition = 'opacity 0.15s';
-            setTimeout(() => {
-                mcBlock.classList.add("broken");
-                cvBtn.classList.remove("mc-cv-hidden");
-                cvBtn.classList.add("mc-cv-revealed");
-            }, 150);
-
-            // Particles
-            const rect = mcBlock.getBoundingClientRect();
-            for (let i = 0; i < 12; i++) {
-                const particle = document.createElement('div');
-                particle.style.position = 'fixed';
-                particle.style.width = (4 + Math.random() * 6) + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.backgroundColor = Math.random() > 0.5 ? 'var(--accent)' : '#555';
-                particle.style.left = (rect.left + Math.random() * rect.width) + 'px';
-                particle.style.top = (rect.top + Math.random() * rect.height) + 'px';
-                particle.style.zIndex = '1000';
-                particle.style.borderRadius = '2px';
-                particle.style.pointerEvents = 'none';
-                document.body.appendChild(particle);
-
-                gsap.to(particle, {
-                    x: (Math.random() - 0.5) * 100,
-                    y: -(20 + Math.random() * 60),
-                    rotation: Math.random() * 360,
-                    opacity: 0,
-                    duration: 0.6 + Math.random() * 0.4,
-                    ease: "power2.out",
-                    onComplete: () => particle.remove()
-                });
-            }
-        }
-    });
-});
+// 4. Easter Egg 1 removed as requested
 
 // 5. Easter Egg 2 — Crafting Table (click items in order)
 document.addEventListener("DOMContentLoaded", () => {
-    // The trigger is now the profile photo instead of a card
-    const heroPhoto = document.querySelector(".hero-photo img");
+    // The trigger is now the profile photo container
+    const heroPhoto = document.querySelector(".hero-photo");
     const modal = document.getElementById("craft-modal");
     const closeBtn = document.getElementById("craft-close");
     const craftResult = document.getElementById("craft-result");
