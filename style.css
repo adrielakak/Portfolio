@@ -448,33 +448,60 @@ footer {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background-color: #555;
+    /* Diamond ores with inner bright core and outer glow, followed by base stone gradient */
     background-image: 
-        radial-gradient(circle at 20% 20%, var(--accent) 3px, transparent 4px),
-        radial-gradient(circle at 80% 80%, var(--accent) 2px, transparent 3px),
-        radial-gradient(circle at 30% 70%, var(--accent) 3px, transparent 4px),
-        radial-gradient(circle at 70% 30%, var(--accent) 2px, transparent 4px);
-    border: 3px solid #333;
+        radial-gradient(circle at 18% 25%, #ffffff 0.5px, #37cdeb 2px, transparent 5px),
+        radial-gradient(circle at 82% 75%, #ffffff 0.5px, #37cdeb 2px, transparent 4px),
+        radial-gradient(circle at 35% 75%, #ffffff 0.5px, #37cdeb 2px, transparent 5px),
+        radial-gradient(circle at 75% 25%, #ffffff 0.5px, #37cdeb 2px, transparent 3px),
+        linear-gradient(135deg, #4a4a4a 0%, #222222 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 50px;
-    padding: 0.75rem 1.75rem;
+    padding: 0.85rem 2rem;
     cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text y="24" font-size="24">⛏️</text></svg>') 4 4, pointer;
-    box-shadow: inset -3px -3px 0px rgba(0,0,0,0.5), inset 3px 3px 0px rgba(255,255,255,0.15);
-    transition: transform 0.1s;
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.4),
+        inset 0 2px 5px rgba(255, 255, 255, 0.2), 
+        inset 0 -3px 8px rgba(0, 0, 0, 0.6),
+        0 0 15px rgba(55, 205, 235, 0.2);
+    transition: transform 0.1s, box-shadow 0.2s;
     position: relative;
     overflow: hidden;
     user-select: none;
+}
+
+.mc-block:hover {
+    box-shadow: 
+        0 12px 32px rgba(0, 0, 0, 0.5),
+        inset 0 2px 5px rgba(255, 255, 255, 0.3), 
+        inset 0 -3px 8px rgba(0, 0, 0, 0.6),
+        0 0 25px rgba(55, 205, 235, 0.4);
 }
 
 .mc-block:active {
     transform: scale(0.95);
 }
 
+/* Premium glassy reflection on top */
+.mc-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+    pointer-events: none;
+    border-radius: 50px 50px 0 0;
+}
+
 .mc-label {
-    color: white;
-    font-size: 0.9rem;
+    color: #ffffff;
+    font-size: 0.95rem;
     font-family: 'Inter', sans-serif;
     pointer-events: none;
-    font-weight: 500;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    position: relative;
+    z-index: 2;
 }
 
 /* Crack overlays */
