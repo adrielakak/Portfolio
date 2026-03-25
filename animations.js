@@ -319,24 +319,18 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Hidden trigger logic
     let photoClicks = 0;
-    let clickTimer;
 
     heroPhoto.addEventListener("click", (e) => {
         photoClicks++;
         
-        // Visual feedback (shake)
-        heroPhoto.style.animation = 'none';
-        void heroPhoto.offsetWidth;
-        heroPhoto.style.animation = 'mc-shake 0.1s';
-
-        clearTimeout(clickTimer);
+        // Gentle feedback
+        heroPhoto.style.transform = "scale(0.95)";
+        setTimeout(() => { heroPhoto.style.transform = "scale(1)"; }, 100);
         
         if (photoClicks >= 3) {
             e.preventDefault();
             photoClicks = 0; // reset
             modal.classList.add("open");
-        } else {
-            clickTimer = setTimeout(() => { photoClicks = 0; }, 600);
         }
     });
 
