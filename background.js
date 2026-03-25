@@ -147,7 +147,7 @@ const CONFIG = {
   waveAmplitude: 0.3,
   colorNum: 4,
   pixelSize: 2,
-  enableMouseInteraction: 1,
+  enableMouseInteraction: 0,
   mouseRadius: 0.3
 };
 
