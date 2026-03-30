@@ -96,26 +96,14 @@
                     </a>
                 </div>
             </div>
-            <!-- Interactive Profile Card Component -->
-            <div class="pc-card-wrapper" style="width: 100%; max-width: 360px; flex-shrink: 0; --inner-gradient: linear-gradient(145deg, #1f2937 0%, #111827 100%); --behind-glow-color: rgba(37, 99, 235, 0.45);">
-                <div class="pc-behind"></div>
-                <div class="pc-card-shell">
-                    <section class="pc-card">
-                        <div class="pc-inside">
-                            <div class="pc-glare"></div>
-                            
-                            <div class="pc-content pc-avatar-content">
-                                <img class="avatar" src="photo.png" alt="Adriel Avatar" loading="lazy" onerror="this.onerror=null; this.src='photo.jpg';" />
-                            </div>
-                            
-                            <div class="pc-content">
-                                <div class="pc-details">
-                                    <h3>Adriel K.</h3>
-                                    <p>Developer & Data</p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+            <!-- Profile Card -->
+            <div class="pc-card-wrapper">
+                <div class="pc-card">
+                    <img class="avatar" src="photo.png" alt="Adriel" loading="lazy" onerror="this.onerror=null; this.src='photo.jpg';" />
+                    <div class="pc-details">
+                        <h3>Adriel K.</h3>
+                        <p>Developer & Data</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -423,12 +411,7 @@
         });
     </script>
 
-    <script type="module">
-        import { initProfileCard } from './profile-card.js';
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            initProfileCard();
-        });
-    </script>
+
+
 </body>
 </html>
