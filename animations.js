@@ -3,6 +3,34 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// 0. Preloader Logic
+document.addEventListener("DOMContentLoaded", () => {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        document.body.style.overflow = 'hidden';
+        window.scrollTo(0, 0);
+
+        const tl = gsap.timeline({
+            onComplete: () => {
+                document.body.style.overflow = ''; // Restore scroll
+                ScrollTrigger.refresh();
+            }
+        });
+
+        tl.to('.preloader-text', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' })
+          .to('.preloader-line', { scaleX: 1, duration: 1.5, ease: 'expo.inOut' }, "-=0.5")
+          .to('.preloader-text', { opacity: 0, y: -20, duration: 0.5, ease: 'power2.in' }, "+=0.3")
+          .to('.preloader-line', { opacity: 0, scaleX: 0, duration: 0.3, ease: 'power2.in' }, "-=0.3")
+          .to('#preloader', { yPercent: -100, duration: 1.2, ease: 'expo.inOut' })
+          .from('.hero-content h1', { y: 30, opacity: 0, duration: 1, ease: 'power3.out' }, "-=0.6")
+          .from('.hero-content .subtitle', { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' }, "-=0.8")
+          .from('.hero-content p', { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' }, "-=0.7")
+          .from('.hero-buttons', { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' }, "-=0.6")
+          .from('.pc-card-wrapper', { scale: 0.85, opacity: 0, rotationY: -15, duration: 1.5, ease: 'elastic.out(1, 0.7)' }, "-=0.8")
+          .set('#preloader', { display: 'none' });
+    }
+});
+
 // 1. Scroll Animations - Fade & Slide Up
 document.addEventListener("DOMContentLoaded", () => {
     // Reveal sections
@@ -241,8 +269,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // 5. Easter Egg 2 — Crafting Table (click items in order)
 document.addEventListener("DOMContentLoaded", () => {
-    // The trigger is now the profile photo container
-    const heroPhoto = document.querySelector(".hero-photo");
+    // The trigger is now the profile wrapper
+    const heroPhoto = document.querySelector(".pc-card-wrapper");
+    if(!heroPhoto) return;
     // Redirect to the dedicated crafting page on success
     let pressTimer;
     let isPressed = false;
