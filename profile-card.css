@@ -259,29 +259,22 @@
 
 .pc-avatar-content .avatar {
   width: 100%;
-  height: 100%;
+  /* No height 100% or object-fit! This allows natural aspect ratio of the cutout. */
   position: absolute;
-  inset: 0;
-  object-fit: cover;
-  object-position: center 25%;
-  transform: scale(1.05) translate(calc((var(--pointer-from-left) - 0.5) * 15px), calc((var(--pointer-from-top) - 0.5) * 15px));
+  left: 50%;
+  bottom: -1px; /* anchors cutout strictly to the bottom */
+  transform-origin: 50% 100%;
+  transform: translateX(calc(-50% + (var(--pointer-from-left) - 0.5) * 10px)) translateZ(0) 
+             scaleY(calc(1 + (var(--pointer-from-top) - 0.5) * 0.02)) 
+             scaleX(calc(1 + (var(--pointer-from-left) - 0.5) * 0.01));
   backface-visibility: hidden;
   will-change: transform;
   transition: transform 120ms ease-out;
 }
 
+/* Completly hide and disable any dark gradient overlay */
 .pc-avatar-content::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.45) 0%,
-    rgba(0, 0, 0, 0) 30%,
-    rgba(0, 0, 0, 0.85) 100%
-  );
+  display: none;
 }
 
 .pc-user-info {
