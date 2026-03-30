@@ -258,11 +258,12 @@
 }
 
 .pc-avatar-content .avatar {
-  width: 100%;
-  /* No height 100% or object-fit! This allows natural aspect ratio of the cutout. */
+  width: 105%;
+  height: 105%;
+  object-fit: cover;
   position: absolute;
   left: 50%;
-  bottom: -1px; /* anchors cutout strictly to the bottom */
+  bottom: 0;
   transform-origin: 50% 100%;
   transform: translateX(calc(-50% + (var(--pointer-from-left) - 0.5) * 10px)) translateZ(0) 
              scaleY(calc(1 + (var(--pointer-from-top) - 0.5) * 0.02)) 
@@ -382,12 +383,12 @@
   font-weight: 600;
   margin: 0;
   font-size: min(5svh, 2.5em);
-  margin: 0;
   background-image: linear-gradient(to bottom, #fff, #6f6fbe);
   background-size: 1em 1.5em;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
 }
 
 .pc-details p {
@@ -403,6 +404,7 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
 }
 
 @keyframes glow-bg {
