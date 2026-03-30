@@ -1,85 +1,42 @@
-/* ===== PROFILE CARD – Simple & Clean ===== */
+/* ===== Profile Photo – Round like Instagram ===== */
 
 .pc-card-wrapper {
-  position: relative;
-  width: 100%;
-  max-width: 360px;
+  width: 180px;
+  height: 180px;
   flex-shrink: 0;
-  margin: 0 auto;
 }
 
 .pc-card {
-  position: relative;
-  aspect-ratio: 0.72;
-  border-radius: 24px;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
 }
 
-/* Photo – fills the entire card */
 .pc-card .avatar {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 24px;
 }
 
-/* Name & title overlay */
+/* On cache le texte, plus besoin dans un rond */
 .pc-details {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 28px 24px;
-  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
-  border-radius: 0 0 24px 24px;
+  display: none;
 }
 
-.pc-details h3 {
-  margin: 0;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #fff;
-  line-height: 1.2;
-}
-
-.pc-details p {
-  margin: 4px 0 0;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.75);
-}
-
-/* ===== Responsive ===== */
 @media (max-width: 768px) {
   .pc-card-wrapper {
-    max-width: 300px;
-  }
-
-  .pc-details h3 {
-    font-size: 1.5rem;
-  }
-
-  .pc-details p {
-    font-size: 0.85rem;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto;
   }
 }
 
 @media (max-width: 480px) {
   .pc-card-wrapper {
-    max-width: 260px;
-  }
-
-  .pc-details {
-    padding: 20px 18px;
-  }
-
-  .pc-details h3 {
-    font-size: 1.3rem;
-  }
-
-  .pc-details p {
-    font-size: 0.8rem;
+    width: 120px;
+    height: 120px;
   }
 }
