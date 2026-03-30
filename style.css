@@ -598,3 +598,45 @@ body.nether-mode #bg-canvas {
         word-break: break-word;
     }
 }
+
+/* =========================================
+   PRELOADER
+   ========================================= */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #050505;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.preloader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.preloader-text {
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    opacity: 0; /* Animated by GSAP */
+    transform: translateY(20px);
+}
+
+.preloader-line {
+    width: 150px;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scaleX(0); /* Animated by GSAP */
+    transform-origin: center;
+}

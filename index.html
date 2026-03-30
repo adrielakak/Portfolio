@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adriel Kourlate</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile-card.css">
 
     <!-- ES Modules Import Map pour Three.js & Postprocessing -->
     <script type="importmap">
@@ -42,6 +43,14 @@
 </head>
 
 <body>
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="preloader-content">
+            <span class="preloader-text">Adriel Kourlate</span>
+            <div class="preloader-line"></div>
+        </div>
+    </div>
+
     <canvas id="bg-canvas"></canvas>
 
     <header>
@@ -66,13 +75,13 @@
         <section class="hero">
             <div class="hero-content">
                 <h1>Adriel Kourlate</h1>
-                <h2 class="subtitle i18n" data-fr="Étudiant en Big Data & Management"
-                    data-en="Student in Big Data & Management">Étudiant en Big Data & Management</h2>
+                <h2 class="subtitle i18n" data-fr="Étudiant Développeur & Data"
+                    data-en="Student Developer & Data Enthusiast">Étudiant Développeur & Data</h2>
 
                 <p class="i18n"
-                    data-fr="Fasciné par la donnée et l'algorithmie, j'aime transformer la complexité en solutions concrètes. Mon objectif ? Créer des outils intelligents et explorer l'IA pour relever les défis stratégiques des entreprises, avec créativité et rigueur."
-                    data-en="Fascinated by data and algorithms, I love turning complexity into concrete solutions. My goal? To create smart tools and explore AI to meet strategic business challenges, with both creativity and focus.">
-                    Fasciné par la donnée et l'algorithmie, j'aime transformer la complexité en solutions concrètes. Mon objectif ? Créer des outils intelligents et explorer l'IA pour relever les défis stratégiques des entreprises, avec créativité et rigueur.
+                    data-fr="Étudiant en double cursus ingénierie et business, je me passionne pour le développement et l'analyse de données. J'aime concevoir des applications et explorer tout le potentiel de l'IA pour apprendre à transformer la complexité en solutions concrètes."
+                    data-en="As a dual-degree engineering and business student, I am passionate about software development and data analysis. I love building apps and exploring the full potential of AI to learn how to turn complexity into concrete solutions.">
+                    Étudiant en double cursus ingénierie et business, je me passionne pour le développement et l'analyse de données. J'aime concevoir des applications et explorer tout le potentiel de l'IA pour apprendre à transformer la complexité en solutions concrètes.
                 </p>
 
                 <div class="hero-buttons">
@@ -87,9 +96,38 @@
                     </a>
                 </div>
             </div>
-            <!-- Photo de Profil (Enregistre ton image sous le nom 'photo.jpg' ou 'photo.png' dans le dossier Portfolio) -->
-            <div class="hero-photo">
-                <img src="photo.jpg" alt="Adriel Kourlate, Audencia" onerror="this.onerror=null; this.src='photo.png';">
+            <!-- Interactive Profile Card Component -->
+            <div class="pc-card-wrapper" style="width: 100%; max-width: 320px; flex-shrink: 0;">
+                <div class="pc-behind"></div>
+                <div class="pc-card-shell">
+                    <section class="pc-card">
+                        <div class="pc-inside">
+                            <div class="pc-shine"></div>
+                            <div class="pc-glare"></div>
+                            <div class="pc-content pc-avatar-content">
+                                <img class="avatar" src="photo.png" alt="Adriel avatar" loading="lazy" onerror="this.onerror=null; this.src='photo.png';" />
+                                <div class="pc-user-info">
+                                    <div class="pc-user-details">
+                                        <div class="pc-mini-avatar">
+                                            <img src="photo.png" alt="mini avatar" loading="lazy" />
+                                        </div>
+                                        <div class="pc-user-text">
+                                            <div class="pc-handle">@adrielkourlate</div>
+                                            <div class="pc-status" style="color:#71C4FF">Online</div>
+                                        </div>
+                                    </div>
+                                    <a href="#contact" class="pc-contact-btn" aria-label="Contact">Contact</a>
+                                </div>
+                            </div>
+                            <div class="pc-content">
+                                <div class="pc-details">
+                                    <h3>Adriel K.</h3>
+                                    <p>Developer & Data</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
             </div>
         </section>
 
@@ -395,7 +433,48 @@
             document.documentElement.lang = currentLang;
         });
     </script>
+    <script type="module">
+        import { initProfileCard } from './profile-card.js';
+        
+        let initialAnimationDone = false;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initProfileCard();
+            
+            // GSAP Preloader Logic
+            if(typeof gsap !== 'undefined') {
+                const tl = gsap.timeline({
+                    onComplete: () => {
+                        document.body.style.overflow = 'auto'; // Restore scroll
+                    }
+                });
+                
+                // Keep scroll locked while loading
+                document.body.style.overflow = 'hidden';
+                window.scrollTo(0, 0);
 
+                // Entrance
+                tl.to('.preloader-text', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' })
+                  .to('.preloader-line', { scaleX: 1, duration: 1.5, ease: 'expo.inOut' }, "-=0.5")
+                  
+                  // Outro
+                  .to('.preloader-text', { opacity: 0, y: -20, duration: 0.5, ease: 'power2.in' }, "+=0.3")
+                  .to('.preloader-line', { opacity: 0, scaleX: 0, duration: 0.3, ease: 'power2.in' }, "-=0.3")
+                  
+                  // Slide UP
+                  .to('#preloader', { yPercent: -100, duration: 1.2, ease: 'expo.inOut' })
+                  
+                  // Stagger Hero Text and Card
+                  .from('.hero-content h1', { y: 30, opacity: 0, duration: 1, ease: 'power3.out' }, "-=0.6")
+                  .from('.hero-content .subtitle', { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' }, "-=0.8")
+                  .from('.hero-content p', { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' }, "-=0.7")
+                  .from('.hero-buttons', { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' }, "-=0.6")
+                  .from('.pc-card-wrapper', { scale: 0.85, opacity: 0, rotationY: -15, duration: 1.5, ease: 'elastic.out(1, 0.7)' }, "-=0.8")
+                  .set('#preloader', { display: 'none' });
+            } else {
+                document.getElementById('preloader').style.display = 'none';
+            }
+        });
+    </script>
 </body>
-
 </html>
