@@ -1,9 +1,10 @@
 /* ===== Profile Photo – Round like Instagram ===== */
 
 .pc-card-wrapper {
-  width: 180px;
-  height: 180px;
+  width: 240px;
+  height: 240px;
   flex-shrink: 0;
+  align-self: center;
 }
 
 .pc-card {
@@ -19,24 +20,24 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 15%;
 }
 
-/* On cache le texte, plus besoin dans un rond */
 .pc-details {
   display: none;
 }
 
 @media (max-width: 768px) {
   .pc-card-wrapper {
-    width: 140px;
-    height: 140px;
+    width: 180px;
+    height: 180px;
     margin: 0 auto;
   }
 }
 
 @media (max-width: 480px) {
   .pc-card-wrapper {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
   }
 }

@@ -578,7 +578,7 @@ body.nether-mode #bg-canvas {
     }
     .pc-card-wrapper {
         order: 4;
-        margin: 0 auto 2rem auto;
+        margin: 1rem auto 2.5rem auto;
     }
     .hero-buttons {
         order: 5;
