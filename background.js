@@ -141,7 +141,7 @@ class RetroEffect extends Effect {
 
 // Config
 const CONFIG = {
-  waveColor: [96 / 255, 165 / 255, 250 / 255], // Accent Blue
+  waveColor: [37/255, 99/255, 235/255], // Accent Blue
   waveSpeed: 0.05,
   waveFrequency: 3,
   waveAmplitude: 0.3,
@@ -195,7 +195,7 @@ function onWindowResize() {
   const height = window.innerHeight;
   renderer.setSize(width, height);
   composer.setSize(width, height);
-
+  
   const dpr = renderer.getPixelRatio();
   uniforms.resolution.value.set(width * dpr, height * dpr);
 }
@@ -221,8 +221,8 @@ function animate() {
 animate();
 
 // Listen for Nether Portal Easter Egg
-const BLUE_COLOR = [37 / 255, 99 / 255, 235 / 255];
-const PURPLE_COLOR = [139 / 255, 0, 255 / 255];
+const BLUE_COLOR = [37/255, 99/255, 235/255];
+const PURPLE_COLOR = [139/255, 0, 255/255];
 
 window.addEventListener('nether-mode', (e) => {
   const target = e.detail.active ? PURPLE_COLOR : BLUE_COLOR;
