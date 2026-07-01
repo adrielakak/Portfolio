@@ -357,3 +357,75 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// 7. Project Dialogs Management
+document.addEventListener("DOMContentLoaded", () => {
+    const modalTriggers = document.querySelectorAll(".modal-trigger");
+    const dialogs = document.querySelectorAll(".project-dialog");
+    
+    modalTriggers.forEach(trigger => {
+        trigger.addEventListener("click", () => {
+            const modalId = trigger.getAttribute("data-modal");
+            const dialog = document.getElementById(modalId);
+            if (dialog) {
+                dialog.showModal();
+                document.body.style.overflow = "hidden"; // Prevent scrolling behind
+                dialog.classList.add("open");
+            }
+        });
+    });
+
+    dialogs.forEach(dialog => {
+        const closeBtn = dialog.querySelector(".dialog-close");
+        
+        const closeModal = () => {
+            dialog.classList.remove("open");
+            // Wait for slide/fade animations to complete before closing natively
+            setTimeout(() => {
+                dialog.close();
+                // Check if any other dialogs are open before restoring overflow
+                const anyOpen = Array.from(dialogs).some(d => d.open);
+                if (!anyOpen) {
+                    document.body.style.overflow = "";
+                }
+            }, 300); // matches CSS animation duration
+        };
+
+        if (closeBtn) {
+            closeBtn.addEventListener("click", closeModal);
+        }
+
+        // Catch Escape key and intercept for animation
+        dialog.addEventListener("cancel", (e) => {
+            e.preventDefault();
+            closeModal();
+        });
+
+        // Fallback for browsers without native closedby="any" support (clicking outside the dialog)
+        if (!('closedBy' in HTMLDialogElement.prototype)) {
+            dialog.addEventListener("click", (event) => {
+                if (event.target !== dialog) return;
+                const rect = dialog.getBoundingClientRect();
+                const isDialogContent = (
+                    rect.top <= event.clientY &&
+                    event.clientY <= rect.top + rect.height &&
+                    rect.left <= event.clientX &&
+                    event.clientX <= rect.left + rect.width
+                );
+                if (!isDialogContent) {
+                    closeModal();
+                }
+            });
+        } else {
+            // Modern support: the browser triggers close natively on backdrop click.
+            // Let's capture the native close event to restore overflow.
+            dialog.addEventListener("close", () => {
+                const anyOpen = Array.from(dialogs).some(d => d.open);
+                if (!anyOpen) {
+                    document.body.style.overflow = "";
+                }
+            });
+        }
+    });
+});
+
+

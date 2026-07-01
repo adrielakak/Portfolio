@@ -77,6 +77,11 @@
                 <h1>Adriel Kourlate</h1>
                 <h2 class="subtitle i18n" data-fr="Étudiant Développeur & Data"
                     data-en="Student Developer & Data Enthusiast">Étudiant Développeur & Data</h2>
+                <div class="internship-badge i18n" 
+                     data-fr="🔍 Recherche de stage : Data / SQL &bull; 3 mois &bull; Été 2027 &bull; Nantes / Paris" 
+                     data-en="🔍 Seeking Internship: Data / SQL &bull; 3 months &bull; Summer 2027 &bull; Nantes / Paris">
+                     🔍 Recherche de stage : Data / SQL &bull; 3 mois &bull; Été 2027 &bull; Nantes / Paris
+                </div>
 
                 <p class="i18n"
                     data-fr="Étudiant en double cursus ingénierie et business, je me passionne pour le développement et l'analyse de données. J'aime créer des applications et explorer le potentiel de l'IA pour résoudre des problèmes concrets."
@@ -287,12 +292,35 @@
                     </p>
                 </a>
 
-                <a href="https://github.com/adrielakak/project-election" target="_blank" class="project-card">
+                <!-- Train DB (Modal Trigger) -->
+                <div class="project-card modal-trigger" data-modal="modal-traindb"
+                    style="border-color: rgba(37, 99, 235, 0.4); box-shadow: 0 4px 20px rgba(37, 99, 235, 0.05); cursor: pointer;">
+                    <h3 class="i18n" data-fr="Train DB — Base SQL" data-en="Train DB — SQL Database">Train DB — Base SQL</h3>
+                    <div class="subtitle i18n" data-fr="PostgreSQL / Base de données" data-en="PostgreSQL / Database">PostgreSQL / Base de données</div>
+                    <p class="i18n"
+                        data-fr="Conception conceptuelle et physique (MCD/MLD) d'un réseau ferroviaire et requêtage SQL complexe (multi-jointures, agrégations)."
+                        data-en="Conceptual and physical design (ERD) of a railway network and complex SQL querying (multi-joins, data aggregation).">
+                        Conception conceptuelle et physique (MCD/MLD) d'un réseau ferroviaire et requêtage SQL complexe (multi-jointures, agrégations).
+                    </p>
+                </div>
+
+                <!-- Project Election (Modal Trigger) -->
+                <div class="project-card modal-trigger" data-modal="modal-election" style="cursor: pointer;">
                     <h3>project-election</h3>
                     <div class="subtitle">Jupyter Notebook</div>
-                    <p class="i18n" data-fr="Analyse de données pour comprendre les tendances statistiques derrière les résultats des élections."
-                        data-en="Data analysis to understand the statistical trends behind election results.">
-                        Analyse de données pour comprendre les tendances statistiques derrière les résultats des élections.
+                    <p class="i18n" data-fr="Analyse de données de 20 ans d'élections présidentielles pour comprendre l'abstention et la mutation politique."
+                        data-en="Data analysis of 20 years of presidential elections to study voter turnout and political realignment.">
+                        Analyse de données de 20 ans d'élections présidentielles pour comprendre l'abstention et la mutation politique.
+                    </p>
+                </div>
+
+                <a href="https://apps.apple.com/app/recomemo" target="_blank" class="project-card">
+                    <h3>RecoMemo</h3>
+                    <div class="subtitle">iOS App</div>
+                    <p class="i18n"
+                        data-fr="Mon premier grand projet iOS, publié sur l'App Store. Une app conçue pour faciliter la mémorisation grâce à la recommandation intelligente."
+                        data-en="My first major iOS project, published on the App Store. An app designed to simplify memorization through smart recommendations.">
+                        Mon premier grand projet iOS, publié sur l'App Store. Une app conçue pour faciliter la mémorisation grâce à la recommandation intelligente.
                     </p>
                 </a>
 
@@ -303,16 +331,6 @@
                         data-fr="Le défi ? Coder un jeu de dames de zéro en Python, en implémentant la modélisation mathématique de sa grille et de ses règles."
                         data-en="The challenge? Coding a checkers game from scratch in Python, implementing mathematical grid modeling and complex logic.">
                         Le défi ? Coder un jeu de dames de zéro en Python, en implémentant la modélisation mathématique de sa grille et de ses règles.
-                    </p>
-                </a>
-
-                <a href="https://apps.apple.com/app/recomemo" target="_blank" class="project-card">
-                    <h3>RecoMemo</h3>
-                    <div class="subtitle">iOS App</div>
-                    <p class="i18n"
-                        data-fr="Mon premier grand projet iOS, publié sur l'App Store. Une app conçue pour faciliter la mémorisation grâce à la recommandation intelligente."
-                        data-en="My first major iOS project, published on the App Store. An app designed to simplify memorization through smart recommendations.">
-                        Mon premier grand projet iOS, publié sur l'App Store. Une app conçue pour faciliter la mémorisation grâce à la recommandation intelligente.
                     </p>
                 </a>
 
@@ -383,6 +401,136 @@
                 © 2025 Adriel Kourlate. Tous droits réservés.
             </p>
         </footer>
+
+        <!-- MODAL ELECTION -->
+        <dialog id="modal-election" closedby="any" class="project-dialog" aria-labelledby="title-election">
+            <div class="dialog-content">
+                <button class="dialog-close" aria-label="Close modal">&times;</button>
+                <div class="dialog-header">
+                    <span class="dialog-category">Jupyter Notebook</span>
+                    <h3 id="title-election" class="i18n" data-fr="Analyse des Élections (2002-2022)" data-en="Presidential Election Analysis (2002-2022)">Analyse des Élections (2002-2022)</h3>
+                </div>
+                
+                <div class="dialog-body">
+                    <div class="dialog-details">
+                        <h4 class="i18n" data-fr="Description du projet" data-en="Project Description">Description du projet</h4>
+                        <p class="i18n" 
+                           data-fr="Une étude approfondie sur 20 ans d'élections présidentielles françaises (premier tour) à l'échelle départementale. Ce projet analyse la crise démocratique à travers l'abstention et la mutation profonde de l'échiquier politique français."
+                           data-en="A comprehensive study of 20 years of French presidential elections (first round) at the department level. This project analyzes the democratic crisis through voter turnout dynamics and the reorganization of the political landscape.">
+                           Une étude approfondie sur 20 ans d'élections présidentielles françaises (premier tour) à l'échelle départementale. Ce projet analyse la crise démocratique à travers l'abstention et la mutation profonde de l'échiquier politique français.
+                        </p>
+                        
+                        <h4 class="i18n" data-fr="Analyses & Révélations" data-en="Key Findings & Insights">Analyses & Révélations</h4>
+                        <ul class="dialog-bullets">
+                            <li class="i18n" 
+                                data-fr="<strong>Crise de l'abstention</strong> : Visualisation cartographique de la hausse de l'abstention (de 16.2% en 2007 à 26.3% en 2022), révélant un désengagement civique croissant."
+                                data-en="<strong>Abstention Crisis</strong>: Mapping voter abstention trends showing a steady rise (from 16.2% in 2007 to 26.3% in 2022), revealing growing civic disengagement.">
+                                <strong>Crise de l'abstention</strong> : Visualisation cartographique de la hausse de l'abstention (de 16.2% en 2007 à 26.3% en 2022), révélant un désengagement civique croissant.
+                            </li>
+                            <li class="i18n"
+                                data-fr="<strong>Reconfiguration du paysage</strong> : Graphique montrant le déclin des partis traditionnels (PS/LR) face à la centralisation du pouvoir et la hausse des extrêmes."
+                                data-en="<strong>Political Realignment</strong>: Chart demonstrating the collapse of traditional parties (PS/LR) alongside the growth of the center and extreme votes.">
+                                <strong>Reconfiguration du paysage</strong> : Graphique montrant le déclin des partis traditionnels (PS/LR) face à la centralisation du pouvoir et la hausse des extrêmes.
+                            </li>
+                            <li class="i18n"
+                                data-fr="<strong>Représentativité électorale</strong> : Diagramme mettant en relief le poids réel des votes exprimés par rapport au nombre total de citoyens inscrits."
+                                data-en="<strong>Electoral Representation</strong>: Breakdown emphasizing the weight of actual votes cast compared to the total number of registered voters.">
+                                <strong>Représentativité électorale</strong> : Diagramme mettant en relief le poids réel des votes exprimés par rapport au nombre total de citoyens inscrits.
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="dialog-sidebar">
+                        <h4 class="i18n" data-fr="Boîte à outils" data-en="Tech Stack">Boîte à outils</h4>
+                        <div class="tech-tags">
+                            <span>Python</span>
+                            <span>Pandas</span>
+                            <span>Jupyter</span>
+                            <span>Plotly Express</span>
+                            <span>GeoJSON</span>
+                        </div>
+                        
+                        <div class="dialog-actions">
+                            <a href="https://github.com/adrielakak/project-election" target="_blank" class="cta i18n" data-fr="Code source GitHub" data-en="GitHub Source Code">Code source GitHub</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dialog-gallery">
+                    <h4 class="i18n" data-fr="Visualisations" data-en="Visualizations">Visualisations</h4>
+                    <div class="gallery-grid">
+                        <div class="gallery-item">
+                            <img src="projects/election-map.png" alt="Carte de l'abstention" loading="lazy" />
+                            <span class="gallery-caption i18n" data-fr="Carte de l'abstention" data-en="Abstention map">Carte de l'abstention</span>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="projects/election-area.png" alt="Évolution politique" loading="lazy" />
+                            <span class="gallery-caption i18n" data-fr="Évolution politique" data-en="Political shift">Évolution politique</span>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="projects/election-bar.png" alt="Participation" loading="lazy" />
+                            <span class="gallery-caption i18n" data-fr="Participation électorale" data-en="Electoral participation">Participation électorale</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </dialog>
+
+        <!-- MODAL TRAIN DB -->
+        <dialog id="modal-traindb" closedby="any" class="project-dialog" aria-labelledby="title-traindb">
+            <div class="dialog-content">
+                <button class="dialog-close" aria-label="Close modal">&times;</button>
+                <div class="dialog-header">
+                    <span class="dialog-category">Base de Données Relationnelle</span>
+                    <h3 id="title-traindb" class="i18n" data-fr="Train DB — Conception & Requêtage" data-en="Train DB — Design & Querying">Train DB — Conception & Requêtage</h3>
+                </div>
+                
+                <div class="dialog-body">
+                    <div class="dialog-details">
+                        <h4 class="i18n" data-fr="Description du projet" data-en="Project Description">Description du projet</h4>
+                        <p class="i18n" 
+                           data-fr="Conception, implémentation et requêtage d'une base de données relationnelle modélisant l'infrastructure ferroviaire nationale, ses trains et ses personnels."
+                           data-en="Design, implementation, and querying of a relational database modeling the national railway infrastructure, trains, and staff.">
+                           Conception, implémentation et requêtage d'une base de données relationnelle modélisant l'infrastructure ferroviaire nationale, ses trains et ses personnels.
+                        </p>
+                        
+                        <h4 class="i18n" data-fr="Compétences développées" data-en="Key Skills & Deliverables">Compétences développées</h4>
+                        <ul class="dialog-bullets">
+                            <li class="i18n" 
+                                data-fr="<strong>Modélisation & Normalisation</strong> : Validation logique et physique des structures de tables via des diagrammes Entité-Relation (ERD)."
+                                data-en="<strong>Modeling & Normalization</strong>: Logical and physical validation of table structures via Entity-Relationship Diagrams (ERD).">
+                                <strong>Modélisation & Normalisation</strong> : Validation logique et physique des structures de tables via des diagrammes Entité-Relation (ERD).
+                            </li>
+                            <li class="i18n"
+                                data-fr="<strong>Requêtes SQL Complexes</strong> : Écriture de requêtes d'interrogation multi-tables avec jointures multiples (`INNER JOIN`), tris ordonnés, filtrages avancés et agrégations (ex. : recherche de conducteurs de TER)."
+                                data-en="<strong>Complex SQL Querying</strong>: Writing multi-table queries with complex joins (`INNER JOIN`), sorting, advanced filtering, and grouping/aggregations (e.g. TER train drivers lookup).">
+                                <strong>Requêtes SQL Complexes</strong> : Écriture de requêtes d'interrogation multi-tables avec jointures multiples (`INNER JOIN`), tris ordonnés, filtrages avancés et agrégations (ex. : recherche de conducteurs de TER).
+                            </li>
+                            <li class="i18n"
+                                data-fr="<strong>Qualité & Cohérence des Données</strong> : Identification et correction d'écarts de données physiques par rapport au modèle logique de gares."
+                                data-en="<strong>Data Quality & Audit</strong>: Audit and resolution of discrepancies between logical models and physical database structures.">
+                                <strong>Qualité & Cohérence des Données</strong> : Identification et correction d'écarts de données physiques par rapport au modèle logique de gares.
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="dialog-sidebar">
+                        <h4 class="i18n" data-fr="Boîte à outils" data-en="Tech Stack">Boîte à outils</h4>
+                        <div class="tech-tags">
+                            <span>SQL</span>
+                            <span>PostgreSQL</span>
+                            <span>Conception ERD</span>
+                            <span>Modélisation MLD</span>
+                            <span>Audit de données</span>
+                        </div>
+                        
+                        <div class="dialog-actions">
+                            <a href="projects/DB_Lab_2_AdrielKourlate_DucLe-2.pdf" target="_blank" class="cta i18n" data-fr="Consulter le Rapport (PDF)" data-en="Read Report (PDF)">Consulter le Rapport (PDF)</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </dialog>
 
     </main>
 
