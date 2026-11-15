@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Adriel Kourlate</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="profile-card.css">
@@ -250,9 +250,11 @@
 
             <div class="projects-grid">
 
-                <a href="https://ateliers-theatre-nantes.onrender.com/" target="_blank" class="project-card"
-                    style="border-color: rgba(37, 99, 235, 0.4); box-shadow: 0 4px 20px rgba(37, 99, 235, 0.1);">
-                    <h3>Ateliers Théâtre Nantes</h3>
+                <a href="https://ateliers-theatre-nantes.onrender.com/" target="_blank" class="project-card project-card--featured">
+                    <div class="project-card-top">
+                        <h3>Ateliers Théâtre Nantes</h3>
+                        <span class="project-badge" aria-hidden="true">Site ↗</span>
+                    </div>
                     <div class="subtitle i18n" data-fr="Site Client (Projet Freelance)"
                         data-en="Client Website (Freelance Project)">Site Client (Projet Freelance)</div>
                     <p class="i18n"
@@ -263,9 +265,11 @@
                 </a>
 
                 <!-- Train DB (Modal Trigger) -->
-                <div class="project-card modal-trigger" data-modal="modal-traindb"
-                    style="border-color: rgba(37, 99, 235, 0.4); box-shadow: 0 4px 20px rgba(37, 99, 235, 0.05); cursor: pointer;">
-                    <h3 class="i18n" data-fr="Train DB - Base SQL" data-en="Train DB - SQL Database">Train DB - Base SQL</h3>
+                <div class="project-card project-card--featured modal-trigger" data-modal="modal-traindb" role="button" tabindex="0">
+                    <div class="project-card-top">
+                        <h3 class="i18n" data-fr="Train DB - Base SQL" data-en="Train DB - SQL Database">Train DB - Base SQL</h3>
+                        <span class="project-badge project-badge--modal i18n" data-fr="Étude de cas ↗" data-en="Case Study ↗">Étude de cas ↗</span>
+                    </div>
                     <div class="subtitle i18n" data-fr="PostgreSQL / Base de données" data-en="PostgreSQL / Database">PostgreSQL / Base de données</div>
                     <p class="i18n"
                         data-fr="Conception conceptuelle et physique (MCD/MLD) d'un réseau ferroviaire et requêtage SQL complexe (multi-jointures, agrégations)."
@@ -275,8 +279,11 @@
                 </div>
 
                 <!-- Project Election (Modal Trigger) -->
-                <div class="project-card modal-trigger" data-modal="modal-election" style="cursor: pointer;">
-                    <h3>project-election</h3>
+                <div class="project-card modal-trigger" data-modal="modal-election" role="button" tabindex="0">
+                    <div class="project-card-top">
+                        <h3>project-election</h3>
+                        <span class="project-badge project-badge--modal i18n" data-fr="Visualisations ↗" data-en="Visualizations ↗">Visualisations ↗</span>
+                    </div>
                     <div class="subtitle">Jupyter Notebook</div>
                     <p class="i18n" data-fr="Analyse de données de 20 ans d'élections présidentielles pour comprendre l'abstention et la mutation politique."
                         data-en="Data analysis of 20 years of presidential elections to study voter turnout and political realignment.">
@@ -285,7 +292,10 @@
                 </div>
 
                 <a href="https://apps.apple.com/app/recomemo" target="_blank" class="project-card">
-                    <h3>RecoMemo</h3>
+                    <div class="project-card-top">
+                        <h3>RecoMemo</h3>
+                        <span class="project-badge" aria-hidden="true">App Store ↗</span>
+                    </div>
                     <div class="subtitle">iOS App</div>
                     <p class="i18n"
                         data-fr="Mon premier grand projet iOS, publié sur l'App Store. Une app conçue pour faciliter la mémorisation grâce à la recommandation intelligente."

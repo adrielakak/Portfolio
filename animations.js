@@ -502,13 +502,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const dialogs = document.querySelectorAll(".project-dialog");
     
     modalTriggers.forEach(trigger => {
-        trigger.addEventListener("click", () => {
+        const openModal = () => {
             const modalId = trigger.getAttribute("data-modal");
             const dialog = document.getElementById(modalId);
             if (dialog) {
                 dialog.showModal();
                 document.body.style.overflow = "hidden"; // Prevent scrolling behind
                 dialog.classList.add("open");
+            }
+        };
+
+        trigger.addEventListener("click", openModal);
+        trigger.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                openModal();
             }
         });
     });
@@ -565,6 +573,33 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     });
+});
+
+// 8. Interactive Spotlight Cards & Viewport Reading Focus (Desktop + Mobile)
+document.addEventListener("DOMContentLoaded", () => {
+    const cards = document.querySelectorAll(".project-card");
+    cards.forEach(card => {
+        card.addEventListener("pointermove", (e) => {
+            if (e.pointerType === "touch") return;
+            const rect = card.getBoundingClientRect();
+            card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+            card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+        }, { passive: true });
+    });
+
+    const focusTargets = document.querySelectorAll(".entry, .project-card");
+    if (focusTargets.length > 0 && "IntersectionObserver" in window) {
+        const focusObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                entry.target.classList.toggle("is-in-focus", entry.isIntersecting);
+            });
+        }, {
+            rootMargin: "-22% 0px -22% 0px",
+            threshold: 0.2
+        });
+
+        focusTargets.forEach(el => focusObserver.observe(el));
+    }
 });
 
 

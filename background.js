@@ -19,7 +19,8 @@ uniform float waveFrequency;
 uniform float waveAmplitude;
 uniform vec3 waveColor;
 uniform vec2 mousePos;
-uniform int enableMouseInteraction;
+uniform float pointerStrength;
+uniform float scrollOffset;
 uniform float mouseRadius;
 
 vec4 mod289(vec4 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
@@ -77,13 +78,14 @@ void main() {
   vec2 uv = gl_FragCoord.xy / resolution.xy;
   uv -= 0.5;
   uv.x *= resolution.x / resolution.y;
-  float f = pattern(uv);
-  if (enableMouseInteraction == 1) {
+  vec2 waveUv = uv + vec2(0.0, scrollOffset);
+  float f = pattern(waveUv);
+  if (pointerStrength > 0.001) {
     vec2 mouseNDC = (mousePos / resolution - 0.5) * vec2(1.0, -1.0);
     mouseNDC.x *= resolution.x / resolution.y;
     float dist = length(uv - mouseNDC);
     float effect = 1.0 - smoothstep(0.0, mouseRadius, dist);
-    f -= 0.5 * effect;
+    f -= 0.42 * effect * pointerStrength;
   }
   
   // Base background is #111111 (0.066, 0.066, 0.066)
@@ -147,8 +149,7 @@ const CONFIG = {
   waveAmplitude: 0.3,
   colorNum: 4,
   pixelSize: 2,
-  enableMouseInteraction: 0,
-  mouseRadius: 0.3
+  mouseRadius: 0.34
 };
 
 // Init Three.js
@@ -169,7 +170,8 @@ const uniforms = {
   waveAmplitude: new THREE.Uniform(CONFIG.waveAmplitude),
   waveColor: new THREE.Uniform(new THREE.Color(...CONFIG.waveColor)),
   mousePos: new THREE.Uniform(new THREE.Vector2(0, 0)),
-  enableMouseInteraction: new THREE.Uniform(CONFIG.enableMouseInteraction),
+  pointerStrength: new THREE.Uniform(0),
+  scrollOffset: new THREE.Uniform(0),
   mouseRadius: new THREE.Uniform(CONFIG.mouseRadius)
 };
 
@@ -202,20 +204,69 @@ function onWindowResize() {
 window.addEventListener('resize', onWindowResize);
 onWindowResize();
 
-// Mouse tracking
+// Pointer, Touch & Scroll Momentum Tracking
+const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 const mouse = new THREE.Vector2();
-window.addEventListener('mousemove', (e) => {
+let targetPointerStrength = 0;
+let pointerIdleTimer = null;
+let lastScrollY = window.scrollY;
+let targetScrollOffset = window.scrollY / Math.max(window.innerHeight, 600) * 0.45;
+let scrollBoost = 0;
+let waveTime = 0;
+
+function updatePointer(clientX, clientY) {
+  if (reducedMotionQuery.matches) return;
   const rect = canvas.getBoundingClientRect();
   const dpr = renderer.getPixelRatio();
-  mouse.set((e.clientX - rect.left) * dpr, (e.clientY - rect.top) * dpr);
+  mouse.set((clientX - rect.left) * dpr, (clientY - rect.top) * dpr);
   uniforms.mousePos.value.copy(mouse);
-});
+  targetPointerStrength = 1.0;
+  clearTimeout(pointerIdleTimer);
+  pointerIdleTimer = setTimeout(() => {
+    targetPointerStrength = 0;
+  }, 600);
+}
+
+window.addEventListener('pointermove', (e) => {
+  updatePointer(e.clientX, e.clientY);
+}, { passive: true });
+
+window.addEventListener('touchstart', (e) => {
+  if (e.touches && e.touches[0]) {
+    updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+  }
+}, { passive: true });
+
+window.addEventListener('touchmove', (e) => {
+  if (e.touches && e.touches[0]) {
+    updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+  }
+}, { passive: true });
+
+window.addEventListener('scroll', () => {
+  const currentScrollY = window.scrollY;
+  const delta = Math.abs(currentScrollY - lastScrollY);
+  lastScrollY = currentScrollY;
+  targetScrollOffset = (currentScrollY / Math.max(window.innerHeight, 600)) * 0.45;
+  if (!reducedMotionQuery.matches) {
+    scrollBoost = Math.min(3.5, scrollBoost + delta * 0.015);
+  }
+}, { passive: true });
 
 // Animation loop
 const clock = new THREE.Clock();
 function animate() {
   requestAnimationFrame(animate);
-  uniforms.time.value = clock.getElapsedTime();
+  const dt = Math.min(clock.getDelta(), 0.05);
+  const motionMultiplier = reducedMotionQuery.matches ? 0 : 1;
+
+  waveTime += dt * (1.0 + scrollBoost) * motionMultiplier;
+  scrollBoost *= Math.exp(-dt * 4.5);
+
+  uniforms.time.value = waveTime;
+  uniforms.scrollOffset.value += (targetScrollOffset - uniforms.scrollOffset.value) * (1 - Math.exp(-dt * 8));
+  uniforms.pointerStrength.value += (targetPointerStrength * motionMultiplier - uniforms.pointerStrength.value) * (1 - Math.exp(-dt * 6));
+
   composer.render();
 }
 animate();
