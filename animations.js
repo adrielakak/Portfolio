@@ -241,28 +241,167 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// 3. Header Auto-Hide on Scroll
+// 3. Dynamic Island / GravityNotch Morphic Navbar
 document.addEventListener("DOMContentLoaded", () => {
+    const header = document.getElementById('site-header') || document.querySelector('header');
+    const sectionWrap = document.getElementById('island-section-wrap');
+    const indexEl = document.getElementById('island-index');
+    const nameEl = document.getElementById('island-section-name');
+    const percentEl = document.getElementById('island-percent');
+    const progressBar = document.getElementById('island-progress-bar');
+    const statusBtn = document.getElementById('island-status');
+
+    if (!header || !indexEl || !nameEl || !percentEl || !progressBar || !statusBtn) return;
+
+    const navLinks = Array.from(header.querySelectorAll('.nav-links a[data-section]'));
+    const sections = [
+        { id: 'hero', index: '00', fr: 'Intro', en: 'Intro' },
+        { id: 'education', index: '01', fr: 'Parcours', en: 'Education' },
+        { id: 'skills', index: '02', fr: 'Compétences', en: 'Skills' },
+        { id: 'experience', index: '03', fr: 'Expériences', en: 'Experience' },
+        { id: 'projects', index: '04', fr: 'Projets', en: 'Projects' },
+        { id: 'contact', index: '05', fr: 'Contact', en: 'Contact' }
+    ].map(item => ({ ...item, el: document.getElementById(item.id) }))
+     .filter(item => item.el);
+
+    if (sections.length === 0) return;
+
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let lastSectionId = null;
     let lastScrollY = window.scrollY;
-    const header = document.querySelector('header');
-    
-    if (header) {
-        // Ensure the header transitions smoothly
-        header.style.transition = "background-color 0.3s ease, border-color 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)";
-        
-        window.addEventListener('scroll', () => {
-            const currentScrollY = window.scrollY;
-            
-            // Only hide when scrolling down past 100px, show when scrolling up
-            if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                header.style.transform = 'translateX(-50%) translateY(-150%)'; // Hide up
-            } else {
-                header.style.transform = 'translateX(-50%) translateY(0)'; // Show
+    let rafPending = false;
+
+    const getDocumentTop = (el) => {
+        let top = 0;
+        let node = el;
+        while (node) {
+            top += node.offsetTop;
+            node = node.offsetParent;
+        }
+        return top;
+    };
+
+    const getActiveSection = (scrollY, maxScroll) => {
+        if (maxScroll > 0 && window.innerHeight + scrollY >= document.documentElement.scrollHeight - 24) {
+            return sections[sections.length - 1];
+        }
+        const probeY = scrollY + window.innerHeight * 0.35;
+        let current = sections[0];
+        for (const sec of sections) {
+            if (getDocumentTop(sec.el) <= probeY) {
+                current = sec;
             }
-            
-            lastScrollY = currentScrollY;
-        }, { passive: true });
+        }
+        return current;
+    };
+
+    const updateIsland = (forceLabel = false) => {
+        rafPending = false;
+        const scrollY = window.scrollY;
+        const direction = scrollY >= lastScrollY ? 1 : -1;
+        lastScrollY = scrollY;
+
+        const isCompact = scrollY > 80;
+        header.classList.toggle('island-compact', isCompact);
+        if (!isCompact) {
+            header.classList.remove('island-open');
+        } else if (window.matchMedia('(hover: hover)').matches && header.matches(':hover')) {
+            header.classList.add('island-open');
+        }
+
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = maxScroll > 0 ? Math.min(1, Math.max(0, scrollY / maxScroll)) : 0;
+        const percent = Math.round(ratio * 100);
+
+        progressBar.style.width = `${(ratio * 100).toFixed(1)}%`;
+        percentEl.textContent = `${percent}%`;
+
+        const active = getActiveSection(scrollY, maxScroll);
+        navLinks.forEach(link => {
+            link.classList.toggle('active-nav', link.dataset.section === active.id);
+        });
+
+        const sectionChanged = active.id !== lastSectionId;
+        if (sectionChanged || forceLabel) {
+            const lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
+            indexEl.textContent = active.index;
+            nameEl.textContent = active[lang];
+            statusBtn.setAttribute(
+                'aria-label',
+                lang === 'en'
+                    ? `Current section: ${active.en}. Expand navigation`
+                    : `Section actuelle : ${active.fr}. Ouvrir la navigation`
+            );
+
+            if (sectionChanged && lastSectionId !== null && sectionWrap && !reducedMotionQuery.matches) {
+                gsap.fromTo(
+                    sectionWrap,
+                    { y: direction * 6, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.22, ease: 'power2.out', overwrite: 'auto' }
+                );
+            }
+            lastSectionId = active.id;
+        }
+    };
+
+    const scheduleUpdate = () => {
+        if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(() => updateIsland(false));
+        }
+    };
+
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate, { passive: true });
+
+    header.addEventListener('pointerenter', (e) => {
+        if (e.pointerType !== 'touch' && header.classList.contains('island-compact')) {
+            header.classList.add('island-open');
+        }
+    });
+
+    header.addEventListener('pointerleave', (e) => {
+        if (e.pointerType !== 'touch') {
+            header.classList.remove('island-open');
+        }
+    });
+
+    const toggleExpand = () => {
+        if (header.classList.contains('island-compact')) {
+            header.classList.toggle('island-open');
+        }
+    };
+
+    statusBtn.addEventListener('click', toggleExpand);
+    statusBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleExpand();
+        }
+    });
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            header.classList.remove('island-open');
+            if (e.detail > 0) e.currentTarget.blur();
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!header.contains(e.target)) {
+            header.classList.remove('island-open');
+        }
+    });
+
+    const langToggle = document.getElementById('lang-toggle');
+    if (langToggle) {
+        langToggle.addEventListener('click', (e) => {
+            if (e.detail > 0) langToggle.blur();
+            setTimeout(() => updateIsland(true), 10);
+        });
     }
+
+    updateIsland(true);
 });
 
 // 4. Easter Egg 1 removed as requested

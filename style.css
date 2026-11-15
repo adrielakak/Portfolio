@@ -79,7 +79,7 @@ section:last-of-type {
 }
 
 /* =========================================
-   NAVIGATION
+   NAVIGATION (Dynamic Island / GravityNotch)
    ========================================= */
 header {
     position: fixed;
@@ -88,20 +88,30 @@ header {
     transform: translateX(-50%);
     width: 90%;
     max-width: 800px;
-    background-color: rgba(17, 17, 17, 0.4);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(17, 17, 17, 0.58);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     z-index: 1000;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.09);
     border-radius: 50px;
     padding: 0.75rem 1.75rem;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 12px 40px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+    transition:
+        max-width 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+        padding 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+        top 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+        border-radius 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
-header:hover {
-    background-color: rgba(22, 22, 22, 0.6);
-    border-color: rgba(255, 255, 255, 0.15);
+header:hover,
+header.island-open {
+    background-color: rgba(20, 20, 22, 0.78);
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 16px 48px rgba(0, 0, 0, 0.65);
 }
 
 header .container {
@@ -110,36 +120,202 @@ header .container {
 }
 
 nav {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    min-height: 28px;
+    gap: 0.75rem;
 }
 
 .logo {
     font-size: 1.1rem;
     font-weight: 600;
+    letter-spacing: -0.02em;
     color: var(--text-primary);
     text-decoration: none;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .logo span {
     color: var(--accent);
+    transition: color 0.3s ease;
 }
 
 .nav-links {
     display: flex;
-    gap: 2rem;
+    align-items: center;
+    gap: 1.75rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0) scale(1);
+    transition: opacity 0.22s ease 0.08s, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.04s, visibility 0s linear 0s;
 }
 
 .nav-links a {
+    position: relative;
     color: var(--text-secondary);
     text-decoration: none;
     font-size: 0.9rem;
     transition: color 0.15s ease;
 }
 
-.nav-links a:hover {
+.nav-links a:hover,
+.nav-links a.active-nav {
     color: var(--text-primary);
+}
+
+.nav-links a.active-nav::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -5px;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Compact status indicator inside Dynamic Island */
+.island-status {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%) scale(0.95);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.14s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.14s;
+}
+
+.island-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    flex-shrink: 0;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.island-section-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+}
+
+.island-index {
+    font-variant-numeric: tabular-nums;
+    font-size: 0.72rem;
+    color: var(--accent-hover);
+    transition: color 0.3s ease;
+}
+
+.island-sep {
+    color: rgba(255, 255, 255, 0.28);
+}
+
+.island-percent {
+    font-variant-numeric: tabular-nums;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    padding-left: 0.5rem;
+    margin-left: 0.1rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 2.35rem;
+    text-align: right;
+}
+
+/* Hairline scroll progress track along bottom of island */
+.island-progress-track {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 0;
+    height: 1.5px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 999px;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.island-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+    box-shadow: 0 0 8px var(--accent);
+    border-radius: 999px;
+    transition: width 0.08s linear, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Keep vertical position steady when expanding mid-scroll */
+header.island-compact {
+    top: 1.1rem;
+}
+
+/* Compact GravityNotch state when scrolled down (and not hovered/focused/opened) */
+header.island-compact:not(.island-open):not(:focus-within) {
+    max-width: 350px;
+    padding: 0.55rem 1.2rem;
+    background-color: rgba(14, 14, 16, 0.84);
+    border-color: rgba(255, 255, 255, 0.13);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 14px 36px rgba(0, 0, 0, 0.65);
+}
+
+header.island-compact:not(.island-open):not(:focus-within) .nav-links {
+    position: absolute;
+    right: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(6px) scale(0.96);
+    transition: opacity 0.12s ease, transform 0.16s ease, visibility 0s linear 0.12s;
+}
+
+header.island-compact:not(.island-open):not(:focus-within) .island-status {
+    position: static;
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.22s ease 0.08s, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.04s, visibility 0s linear 0s;
+}
+
+header.island-compact .island-progress-track {
+    opacity: 1;
+}
+
+header:active {
+    transform: translateX(-50%) scale(0.99);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    header,
+    .nav-links,
+    .island-status,
+    .island-progress-bar,
+    .island-progress-track {
+        transition: none !important;
+    }
 }
 
 /* =========================================
@@ -533,10 +709,24 @@ body.nether-mode #bg-canvas {
         border-radius: 20px;
     }
 
+    header.island-compact:not(.island-open):not(:focus-within) {
+        top: 0.75rem;
+        width: 95%;
+        max-width: 315px;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+    }
+
     nav {
         flex-direction: column;
         gap: 0.75rem;
         width: 100%;
+    }
+
+    header.island-compact:not(.island-open):not(:focus-within) nav {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 0.75rem;
     }
 
     .nav-links {
@@ -545,6 +735,12 @@ body.nether-mode #bg-canvas {
         justify-content: center;
         width: 100%;
         gap: 0.5rem 0.8rem;
+        white-space: normal;
+    }
+
+    header.island-compact:not(.island-open):not(:focus-within) .nav-links {
+        width: auto;
+        white-space: nowrap;
     }
 
     .nav-links::-webkit-scrollbar {
@@ -553,6 +749,12 @@ body.nether-mode #bg-canvas {
 
     .nav-links a {
         font-size: 0.75rem;
+    }
+
+    .nav-links a.active-nav::after {
+        bottom: -3px;
+        width: 3px;
+        height: 3px;
     }
 
     .hero {

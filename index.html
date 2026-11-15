@@ -53,26 +53,40 @@
 
     <canvas id="bg-canvas"></canvas>
 
-    <header>
+    <header id="site-header">
         <div class="container">
-            <nav>
+            <nav aria-label="Navigation principale">
                 <a href="#" class="logo">Adriel<span>.</span></a>
+
+                <div class="island-status" id="island-status" role="button" tabindex="0" aria-label="Ouvrir la navigation">
+                    <span class="island-dot" aria-hidden="true"></span>
+                    <span class="island-section-wrap" id="island-section-wrap">
+                        <span class="island-index" id="island-index">00</span>
+                        <span class="island-sep" aria-hidden="true">·</span>
+                        <span class="island-section-name" id="island-section-name">Intro</span>
+                    </span>
+                    <span class="island-percent" id="island-percent">0%</span>
+                </div>
+
                 <div class="nav-links">
-                    <a href="#education" class="i18n" data-fr="Parcours" data-en="Education">Parcours</a>
-                    <a href="#skills" class="i18n" data-fr="Compétences" data-en="Skills">Compétences</a>
-                    <a href="#experience" class="i18n" data-fr="Expériences" data-en="Experience">Expériences</a>
-                    <a href="#projects" class="i18n" data-fr="Projets" data-en="Projects">Projets</a>
-                    <a href="#contact" class="i18n" data-fr="Contact" data-en="Contact">Contact</a>
-                    <button class="lang-btn" id="lang-toggle">EN</button>
+                    <a href="#education" class="i18n" data-section="education" data-fr="Parcours" data-en="Education">Parcours</a>
+                    <a href="#skills" class="i18n" data-section="skills" data-fr="Compétences" data-en="Skills">Compétences</a>
+                    <a href="#experience" class="i18n" data-section="experience" data-fr="Expériences" data-en="Experience">Expériences</a>
+                    <a href="#projects" class="i18n" data-section="projects" data-fr="Projets" data-en="Projects">Projets</a>
+                    <a href="#contact" class="i18n" data-section="contact" data-fr="Contact" data-en="Contact">Contact</a>
+                    <button class="lang-btn" id="lang-toggle" type="button">EN</button>
                 </div>
             </nav>
+        </div>
+        <div class="island-progress-track" aria-hidden="true">
+            <div class="island-progress-bar" id="island-progress-bar"></div>
         </div>
     </header>
 
     <main class="container">
 
         <!-- HERO -->
-        <section class="hero">
+        <section class="hero" id="hero">
             <div class="hero-content">
                 <h1>Adriel Kourlate</h1>
                 <h2 class="subtitle i18n" data-fr="Étudiant en Data"
