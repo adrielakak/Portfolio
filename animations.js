@@ -3,97 +3,39 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// 0. Preloader Logic (Liquid Glass & Morphing Dynamic Island)
+// 0. Preloader Logic
 document.addEventListener("DOMContentLoaded", () => {
     const preloader = document.getElementById('preloader');
-    if (!preloader) return;
-
-    const island = document.getElementById('preloader-island');
-    const bar = document.getElementById('preloader-bar');
-    const counterEl = document.getElementById('preloader-counter');
-    const header = document.getElementById('site-header');
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        preloader.style.display = 'none';
-        document.body.style.overflow = '';
-        return;
-    }
-
-    document.body.style.overflow = 'hidden';
-    window.scrollTo(0, 0);
-
-    if (header) {
-        gsap.set(header, { autoAlpha: 0 });
-    }
-
-    const counterProxy = { val: 0 };
-
-    const tl = gsap.timeline({
-        onComplete: () => {
+    if (preloader) {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             preloader.style.display = 'none';
             document.body.style.overflow = '';
-            if (header) {
-                gsap.set(header, { clearProps: 'opacity,visibility' });
-            }
-            ScrollTrigger.refresh();
+            return;
         }
-    });
 
-    tl.to(island, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.36,
-        ease: 'power3.out'
-    })
-    .to(counterProxy, {
-        val: 100,
-        duration: 0.88,
-        ease: 'power2.inOut',
-        onUpdate: () => {
-            if (counterEl) {
-                counterEl.textContent = `${String(Math.round(counterProxy.val)).padStart(2, '0')}%`;
+        document.body.style.overflow = 'hidden';
+        window.scrollTo(0, 0);
+
+        const tl = gsap.timeline({
+            onComplete: () => {
+                document.body.style.overflow = ''; // Restore scroll
+                ScrollTrigger.refresh();
             }
-        }
-    }, '-=0.12')
-    .to(bar, {
-        scaleX: 1,
-        duration: 0.88,
-        ease: 'power2.inOut'
-    }, '<')
-    .to(['.preloader-meta', '.preloader-track'], {
-        opacity: 0,
-        duration: 0.16,
-        ease: 'power2.in'
-    }, '+=0.06')
-    .to(island, {
-        y: () => {
-            if (!header || !island) return -window.innerHeight * 0.42;
-            const hRect = header.getBoundingClientRect();
-            const iRect = island.getBoundingClientRect();
-            return (hRect.top + hRect.height * 0.5) - (iRect.top + iRect.height * 0.5);
-        },
-        scale: 0.9,
-        borderRadius: '50px',
-        opacity: 0,
-        duration: 0.5,
-        ease: 'expo.inOut'
-    }, '-=0.04')
-    .to(header, {
-        autoAlpha: 1,
-        duration: 0.42,
-        ease: 'power2.out'
-    }, '-=0.32')
-    .to(preloader, {
-        opacity: 0,
-        duration: 0.45,
-        ease: 'power2.inOut'
-    }, '-=0.38')
-    .from('.hero-content h1', { y: 24, opacity: 0, duration: 0.7, ease: 'power3.out' }, '-=0.35')
-    .from('.hero-content .subtitle', { y: 18, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.55')
-    .from('.hero-content p', { y: 18, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.5')
-    .from('.hero-buttons', { y: 18, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.45')
-    .from('.pc-card-wrapper', { scale: 0.9, opacity: 0, rotationY: -12, duration: 1.0, ease: 'power3.out' }, '-=0.65');
+        });
+
+        tl.to('.preloader-text', { opacity: 1, y: 0, backgroundPosition: '100% 50%', duration: 1, ease: 'power3.out' })
+          .to('.preloader-line', { scaleX: 1, duration: 1.5, ease: 'expo.inOut' }, "-=0.5")
+          .to('.preloader-text', { opacity: 0, y: -20, duration: 0.5, ease: 'power2.in' }, "+=0.3")
+          .to('.preloader-line', { opacity: 0, scaleX: 0, duration: 0.3, ease: 'power2.in' }, "-=0.3")
+          .to('.preloader-glow', { opacity: 0, duration: 0.4, ease: 'power2.in' }, "<")
+          .to('#preloader', { yPercent: -100, duration: 1.2, ease: 'expo.inOut' })
+          .from('.hero-content h1', { y: 30, opacity: 0, duration: 1, ease: 'power3.out' }, "-=0.6")
+          .from('.hero-content .subtitle', { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' }, "-=0.8")
+          .from('.hero-content p', { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' }, "-=0.7")
+          .from('.hero-buttons', { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' }, "-=0.6")
+          .from('.pc-card-wrapper', { scale: 0.85, opacity: 0, rotationY: -15, duration: 1.5, ease: 'elastic.out(1, 0.7)' }, "-=0.8")
+          .set('#preloader', { display: 'none' });
+    }
 });
 
 // 1. Scroll Animations - Fade & Slide Up
