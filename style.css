@@ -155,6 +155,12 @@ nav {
     transition: opacity 0.22s ease 0.08s, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.04s, visibility 0s linear 0s;
 }
 
+.nav-links .lang-btn {
+    min-width: 2.3rem;
+    text-align: center;
+    flex-shrink: 0;
+}
+
 .nav-links a {
     position: relative;
     color: var(--text-secondary);
@@ -876,11 +882,12 @@ body.nether-mode #bg-canvas {
 
     .nav-links {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: center;
         width: 100%;
-        gap: 0.35rem 0.55rem;
-        white-space: normal;
+        gap: 0.25rem;
+        white-space: nowrap;
     }
 
     header.island-compact:not(.island-open):not(:focus-within) .nav-links {
@@ -893,13 +900,20 @@ body.nether-mode #bg-canvas {
     }
 
     .nav-links a {
-        font-size: 0.72rem;
-        padding: 0.15rem 0.05rem;
+        font-size: clamp(0.62rem, 2.75vw, 0.74rem);
+        padding: 0.15rem 0;
+        flex-shrink: 0;
     }
 
     .nav-links .lang-btn {
-        padding: 0.12rem 0.45rem;
-        font-size: 0.7rem;
+        min-width: 2.05rem;
+        height: 1.45rem;
+        padding: 0 0.35rem;
+        font-size: 0.68rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
     }
 
     .nav-links a.active-nav::after {
@@ -911,7 +925,7 @@ body.nether-mode #bg-canvas {
     .hero {
         flex-direction: column;
         gap: 0;
-        padding: 8.75rem 0.5rem 2.5rem 0.5rem;
+        padding: 7.5rem 0.5rem 2.5rem 0.5rem;
         text-align: center;
     }
     

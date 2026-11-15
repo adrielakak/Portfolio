@@ -295,6 +295,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return current;
     };
 
+    const hoverMedia = window.matchMedia('(hover: hover) and (pointer: fine)');
+    let openedAtScrollY = 0;
+
     const updateIsland = (forceLabel = false) => {
         rafPending = false;
         const scrollY = window.scrollY;
@@ -305,8 +308,10 @@ document.addEventListener("DOMContentLoaded", () => {
         header.classList.toggle('island-compact', isCompact);
         if (!isCompact) {
             header.classList.remove('island-open');
-        } else if (window.matchMedia('(hover: hover)').matches && header.matches(':hover')) {
+        } else if (hoverMedia.matches && header.matches(':hover')) {
             header.classList.add('island-open');
+        } else if (!hoverMedia.matches && header.classList.contains('island-open') && Math.abs(scrollY - openedAtScrollY) > 50) {
+            header.classList.remove('island-open');
         }
 
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -351,28 +356,64 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    let lastInputWasKeyboard = false;
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab' || e.key === 'Enter' || e.key === ' ') {
+            lastInputWasKeyboard = true;
+        }
+    }, true);
+    document.addEventListener('pointerdown', () => {
+        lastInputWasKeyboard = false;
+    }, true);
+
     window.addEventListener('scroll', scheduleUpdate, { passive: true });
     window.addEventListener('resize', scheduleUpdate, { passive: true });
 
     header.addEventListener('pointerenter', (e) => {
-        if (e.pointerType !== 'touch' && header.classList.contains('island-compact')) {
+        if (hoverMedia.matches && e.pointerType !== 'touch' && header.classList.contains('island-compact')) {
             header.classList.add('island-open');
         }
     });
 
     header.addEventListener('pointerleave', (e) => {
-        if (e.pointerType !== 'touch') {
+        if (hoverMedia.matches && e.pointerType !== 'touch') {
             header.classList.remove('island-open');
         }
     });
 
+    // Capture-phase tap on the compact pill opens it reliably on touch devices
+    // without triggering inner links (like the logo) or collapsing on release.
+    header.addEventListener('click', (e) => {
+        if (header.classList.contains('island-compact') && !header.classList.contains('island-open')) {
+            e.preventDefault();
+            e.stopPropagation();
+            header.classList.add('island-open');
+            openedAtScrollY = window.scrollY;
+            if (!lastInputWasKeyboard && document.activeElement && header.contains(document.activeElement)) {
+                document.activeElement.blur();
+            }
+        }
+    }, true);
+
+    const logoLink = header.querySelector('.logo');
+    if (logoLink) {
+        logoLink.addEventListener('click', () => {
+            if (header.classList.contains('island-open')) {
+                header.classList.remove('island-open');
+            }
+            if (!lastInputWasKeyboard) logoLink.blur();
+        });
+    }
+
     const toggleExpand = () => {
         if (header.classList.contains('island-compact')) {
             header.classList.toggle('island-open');
+            if (header.classList.contains('island-open')) {
+                openedAtScrollY = window.scrollY;
+            }
         }
     };
 
-    statusBtn.addEventListener('click', toggleExpand);
     statusBtn.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
@@ -383,20 +424,27 @@ document.addEventListener("DOMContentLoaded", () => {
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             header.classList.remove('island-open');
-            if (e.detail > 0) e.currentTarget.blur();
+            if (!lastInputWasKeyboard || e.detail > 0) e.currentTarget.blur();
         });
     });
 
-    document.addEventListener('click', (e) => {
+    document.addEventListener('pointerdown', (e) => {
         if (!header.contains(e.target)) {
             header.classList.remove('island-open');
+            if (document.activeElement && header.contains(document.activeElement)) {
+                document.activeElement.blur();
+            }
         }
     });
 
     const langToggle = document.getElementById('lang-toggle');
     if (langToggle) {
         langToggle.addEventListener('click', (e) => {
-            if (e.detail > 0) langToggle.blur();
+            if (!lastInputWasKeyboard || e.detail > 0) langToggle.blur();
+            if (header.classList.contains('island-compact')) {
+                header.classList.add('island-open');
+                openedAtScrollY = window.scrollY;
+            }
             setTimeout(() => updateIsland(true), 10);
         });
     }
