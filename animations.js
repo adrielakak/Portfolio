@@ -551,17 +551,83 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// 7. Project Dialogs Management
+// 7. Project Dialogs Management (close button, Escape, backdrop, swipe down)
+const SHEET_EASE = 'cubic-bezier(0.32, 0.72, 0, 1)';
+const SHEET_CLOSE_MS = 300;
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+function attachSwipeToDismiss(dialog, closeModal) {
+    let startY = 0;
+    let startTime = 0;
+    let offset = 0;
+    let tracking = false;
+    let dragging = false;
+
+    const finish = () => {
+        tracking = false;
+        if (!dragging) return;
+        dragging = false;
+        const velocity = offset / Math.max(performance.now() - startTime, 1);
+        if (offset > dialog.offsetHeight * 0.25 || velocity > 0.11) {
+            closeModal();
+        } else {
+            dialog.style.transition = `transform ${SHEET_CLOSE_MS}ms ${SHEET_EASE}`;
+            dialog.style.transform = '';
+        }
+    };
+
+    dialog.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 1) {
+            tracking = false;
+            return;
+        }
+        tracking = dialog.scrollTop <= 0;
+        dragging = false;
+        startY = e.touches[0].clientY;
+        startTime = performance.now();
+        offset = 0;
+    }, { passive: true });
+
+    dialog.addEventListener('touchmove', (e) => {
+        if (!tracking || e.touches.length > 1) return;
+        const delta = e.touches[0].clientY - startY;
+        if (!dragging) {
+            if (delta <= 0) {
+                tracking = false;
+                return;
+            }
+            dragging = true;
+            dialog.style.animation = 'none';
+            dialog.style.transition = 'none';
+        }
+        e.preventDefault();
+        offset = delta > 0 ? delta : -Math.sqrt(-delta) * 2;
+        dialog.style.transform = `translateY(${offset}px)`;
+    }, { passive: false });
+
+    dialog.addEventListener('touchend', finish);
+    dialog.addEventListener('touchcancel', finish);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const modalTriggers = document.querySelectorAll(".modal-trigger");
     const dialogs = document.querySelectorAll(".project-dialog");
-    
+
+    const restoreScrollIfNoneOpen = () => {
+        const anyOpen = Array.from(dialogs).some(d => d.open);
+        if (!anyOpen) {
+            document.body.style.overflow = "";
+        }
+    };
+
     modalTriggers.forEach(trigger => {
         const openModal = () => {
             const modalId = trigger.getAttribute("data-modal");
             const dialog = document.getElementById(modalId);
             if (dialog) {
                 dialog.showModal();
+                // showModal() auto-focuses the close button, which draws a focus ring on it
+                dialog.focus({ preventScroll: true });
                 document.body.style.overflow = "hidden"; // Prevent scrolling behind
                 dialog.classList.add("open");
             }
@@ -577,20 +643,43 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     dialogs.forEach(dialog => {
+        dialog.tabIndex = -1;
         const closeBtn = dialog.querySelector(".dialog-close");
-        
+        let closing = false;
+
+        const resetSheet = () => {
+            dialog.classList.remove("sheet-closing");
+            dialog.style.animation = '';
+            dialog.style.transition = '';
+            dialog.style.transform = '';
+            dialog.style.opacity = '';
+            closing = false;
+        };
+
         const closeModal = () => {
+            if (closing || !dialog.open) return;
+            closing = true;
             dialog.classList.remove("open");
-            // Wait for slide/fade animations to complete before closing natively
+            dialog.classList.add("sheet-closing");
+
+            const reduce = prefersReducedMotion.matches;
+            const duration = reduce ? 150 : SHEET_CLOSE_MS;
+            dialog.style.animation = 'none';
+            void dialog.offsetHeight;
+            dialog.style.transition = reduce
+                ? `opacity ${duration}ms ease`
+                : `transform ${duration}ms ${SHEET_EASE}, opacity ${duration}ms ${SHEET_EASE}`;
+            if (!reduce) dialog.style.transform = 'translateY(100%)';
+            dialog.style.opacity = '0';
+
             setTimeout(() => {
                 dialog.close();
-                // Check if any other dialogs are open before restoring overflow
-                const anyOpen = Array.from(dialogs).some(d => d.open);
-                if (!anyOpen) {
-                    document.body.style.overflow = "";
-                }
-            }, 300); // matches CSS animation duration
+                resetSheet();
+                restoreScrollIfNoneOpen();
+            }, duration);
         };
+
+        attachSwipeToDismiss(dialog, closeModal);
 
         if (closeBtn) {
             closeBtn.addEventListener("click", closeModal);
@@ -617,16 +706,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     closeModal();
                 }
             });
-        } else {
-            // Modern support: the browser triggers close natively on backdrop click.
-            // Let's capture the native close event to restore overflow.
-            dialog.addEventListener("close", () => {
-                const anyOpen = Array.from(dialogs).some(d => d.open);
-                if (!anyOpen) {
-                    document.body.style.overflow = "";
-                }
-            });
         }
+
+        // Native close (closedby="any" backdrop click, or after our animation)
+        dialog.addEventListener("close", () => {
+            resetSheet();
+            restoreScrollIfNoneOpen();
+        });
     });
 });
 
@@ -658,3 +744,142 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+
+// 9. Image viewer for gallery visualisations (click to enlarge, swipe down to close)
+document.addEventListener("DOMContentLoaded", () => {
+    const images = document.querySelectorAll(".gallery-item img");
+    if (images.length === 0) return;
+
+    const EASE = 'cubic-bezier(0.32, 0.72, 0, 1)';
+    const CLOSE_MS = 300;
+    const BG_ALPHA = 0.92;
+    const reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const viewer = document.createElement('dialog');
+    viewer.className = 'image-viewer';
+    viewer.tabIndex = -1;
+    viewer.innerHTML = `
+        <button class="image-viewer__close" aria-label="Close image">&times;</button>
+        <figure class="image-viewer__figure">
+            <img class="image-viewer__img" alt="" draggable="false" />
+            <figcaption class="image-viewer__caption"></figcaption>
+        </figure>`;
+    document.body.appendChild(viewer);
+
+    const figure = viewer.querySelector('.image-viewer__figure');
+    const bigImg = viewer.querySelector('.image-viewer__img');
+    const caption = viewer.querySelector('.image-viewer__caption');
+    const closeBtn = viewer.querySelector('.image-viewer__close');
+    let closing = false;
+
+    const reset = () => {
+        figure.style.transition = '';
+        figure.style.transform = '';
+        figure.style.opacity = '';
+        viewer.style.transition = '';
+        viewer.style.backgroundColor = '';
+        closing = false;
+    };
+
+    const open = (img) => {
+        const captionEl = img.closest('.gallery-item')?.querySelector('.gallery-caption');
+        bigImg.src = img.currentSrc || img.src;
+        bigImg.alt = img.alt;
+        caption.textContent = captionEl ? captionEl.textContent : '';
+        reset();
+        viewer.showModal();
+        viewer.focus({ preventScroll: true });
+    };
+
+    const close = () => {
+        if (closing || !viewer.open) return;
+        closing = true;
+        const reduce = reduceQuery.matches;
+        const duration = reduce ? 150 : CLOSE_MS;
+        figure.style.transition = `transform ${duration}ms ${EASE}, opacity ${duration}ms ${EASE}`;
+        viewer.style.transition = `background-color ${duration}ms ${EASE}`;
+        if (!reduce) figure.style.transform = 'translateY(40vh) scale(0.9)';
+        figure.style.opacity = '0';
+        viewer.style.backgroundColor = 'rgba(5, 5, 5, 0)';
+        setTimeout(() => {
+            viewer.close();
+            reset();
+        }, duration);
+    };
+
+    images.forEach(img => {
+        img.tabIndex = 0;
+        img.setAttribute('role', 'button');
+        img.addEventListener('click', () => open(img));
+        img.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                open(img);
+            }
+        });
+    });
+
+    closeBtn.addEventListener('click', close);
+    viewer.addEventListener('cancel', (e) => {
+        e.preventDefault();
+        close();
+    });
+
+    // Drag down to dismiss (mouse and touch), tap outside the image to close
+    let pointerId = null;
+    let startY = 0;
+    let startTime = 0;
+    let offset = 0;
+    let dragging = false;
+
+    viewer.addEventListener('pointerdown', (e) => {
+        if (closing || pointerId !== null || closeBtn.contains(e.target)) return;
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        pointerId = e.pointerId;
+        viewer.setPointerCapture(pointerId);
+        startY = e.clientY;
+        startTime = performance.now();
+        offset = 0;
+        dragging = false;
+    });
+
+    viewer.addEventListener('pointermove', (e) => {
+        if (e.pointerId !== pointerId) return;
+        const delta = e.clientY - startY;
+        if (!dragging) {
+            if (Math.abs(delta) < 4) return;
+            dragging = true;
+            figure.style.transition = 'none';
+            viewer.style.transition = 'none';
+        }
+        offset = delta > 0 ? delta : -Math.sqrt(-delta) * 2;
+        const progress = Math.min(Math.max(offset, 0) / 400, 1);
+        figure.style.transform = `translateY(${offset}px) scale(${1 - progress * 0.1})`;
+        viewer.style.backgroundColor = `rgba(5, 5, 5, ${BG_ALPHA * (1 - progress * 0.7)})`;
+    });
+
+    const release = (e) => {
+        if (e.pointerId !== pointerId) return;
+        pointerId = null;
+
+        if (!dragging) {
+            if (e.type === 'pointerup' && e.target !== bigImg) close();
+            return;
+        }
+        dragging = false;
+
+        const velocity = offset / Math.max(performance.now() - startTime, 1);
+        if (offset > 120 || velocity > 0.11) {
+            close();
+        } else {
+            figure.style.transition = `transform ${CLOSE_MS}ms ${EASE}`;
+            viewer.style.transition = `background-color ${CLOSE_MS}ms ${EASE}`;
+            figure.style.transform = '';
+            viewer.style.backgroundColor = '';
+        }
+    };
+
+    viewer.addEventListener('pointerup', release);
+    viewer.addEventListener('pointercancel', release);
+    viewer.addEventListener('close', reset);
+});

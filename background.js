@@ -204,14 +204,11 @@ function onWindowResize() {
 window.addEventListener('resize', onWindowResize);
 onWindowResize();
 
-// Pointer, Touch & Scroll Momentum Tracking
+// Pointer & Touch Tracking (background is intentionally not tied to scroll)
 const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 const mouse = new THREE.Vector2();
 let targetPointerStrength = 0;
 let pointerIdleTimer = null;
-let lastScrollY = window.scrollY;
-let targetScrollOffset = window.scrollY / Math.max(window.innerHeight, 600) * 0.45;
-let scrollBoost = 0;
 let waveTime = 0;
 
 function updatePointer(clientX, clientY) {
@@ -243,16 +240,6 @@ window.addEventListener('touchmove', (e) => {
   }
 }, { passive: true });
 
-window.addEventListener('scroll', () => {
-  const currentScrollY = window.scrollY;
-  const delta = Math.abs(currentScrollY - lastScrollY);
-  lastScrollY = currentScrollY;
-  targetScrollOffset = (currentScrollY / Math.max(window.innerHeight, 600)) * 0.45;
-  if (!reducedMotionQuery.matches) {
-    scrollBoost = Math.min(3.5, scrollBoost + delta * 0.015);
-  }
-}, { passive: true });
-
 // Animation loop
 const clock = new THREE.Clock();
 function animate() {
@@ -260,11 +247,9 @@ function animate() {
   const dt = Math.min(clock.getDelta(), 0.05);
   const motionMultiplier = reducedMotionQuery.matches ? 0 : 1;
 
-  waveTime += dt * (1.0 + scrollBoost) * motionMultiplier;
-  scrollBoost *= Math.exp(-dt * 4.5);
+  waveTime += dt * motionMultiplier;
 
   uniforms.time.value = waveTime;
-  uniforms.scrollOffset.value += (targetScrollOffset - uniforms.scrollOffset.value) * (1 - Math.exp(-dt * 8));
   uniforms.pointerStrength.value += (targetPointerStrength * motionMultiplier - uniforms.pointerStrength.value) * (1 - Math.exp(-dt * 6));
 
   composer.render();
