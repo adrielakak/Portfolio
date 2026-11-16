@@ -21,12 +21,18 @@
 html {
     scroll-behavior: smooth;
     background-color: var(--bg-main);
+    overflow-x: hidden;
+    overflow-x: clip;
+    overscroll-behavior-x: none;
     /* FIX: Empêche le navigateur de mettre un fond blanc par défaut */
 }
 
 body {
     color: var(--text-primary);
     line-height: 1.6;
+    overflow-x: hidden;
+    overflow-x: clip;
+    overscroll-behavior-x: none;
     -webkit-font-smoothing: antialiased;
     position: relative;
     z-index: 1;
@@ -36,7 +42,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     z-index: -1;
     pointer-events: none;
@@ -1367,7 +1373,7 @@ body.nether-mode #bg-canvas {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     background: radial-gradient(circle at 50% 50%, #0a1124 0%, #05070e 48%, #040406 100%);
     border-bottom: 1px solid rgba(59, 130, 246, 0.18);
